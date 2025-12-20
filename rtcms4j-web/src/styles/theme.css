@@ -1,0 +1,16 @@
+:root {
+  --app-color-soft-red: #f3c7c7;
+  --app-color-soft-blue: #a5d8ff;
+  --app-color-soft-yellow: #ffec99;
+  --app-color-soft-green: #b2f2bb;
+  --app-color-soft-black: #1f1f1f;
+
+  --app-color-os-hd-black: #151515;
+  --app-color-os-nav-gray: #292e33;
+  --app-color-os-nav-light-gray: #393f43;
+  --app-color-os-bg-white: #ededed;
+
+  --app-color-os-text-white: #fafafa;
+  --app-color-os-text-dark: #5b5b5b;
+  --app-color-os-text-black: #333333;
+}

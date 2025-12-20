@@ -1,0 +1,28 @@
+.app-sidebar {
+  background: var(--app-color-os-nav-gray);
+}
+
+.app-sidebar .pf-v6-c-nav__subnav {
+  background: var(--app-color-os-nav-light-gray);
+}
+
+.app-sidebar .pf-v6-c-nav__link {
+  color: var(--app-color-os-text-white);
+}
+
+.app-sidebar .pf-v6-c-nav__link:hover,.pf-v6-c-nav__link:focus,.active {
+  background: color-mix(in srgb-linear, var(--app-color-os-nav-gray), white 5%);
+}
+
+.nav-expandable-title{
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.nav-expandable-title img {
+  height: 1.5em;
+  width: 1.5em;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
