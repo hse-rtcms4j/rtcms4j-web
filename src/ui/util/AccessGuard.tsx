@@ -6,10 +6,12 @@ import {
     Spinner,
 } from "@patternfly/react-core";
 import BugIcon from '@patternfly/react-icons/dist/esm/icons/bug-icon';
+import NetworkIcon from '@patternfly/react-icons/dist/esm/icons/network-icon';
 import AccessDenied from "@/ui/AccessDenied";
+import parseApiFetchError from "@/api/error-handler";
 
 
-type AccessState = "checking" | "allowed" | "denied" | "error";
+type AccessState = "checking" | "allowed" | "denied" | "network-error" | "unknown-error";
 
 function FullPageSpinner() {
     return (
@@ -21,10 +23,20 @@ function FullPageSpinner() {
     );
 }
 
-function ErrorPage() {
+function NetworkErrorPage() {
     return (
         <Bullseye>
-            <EmptyState titleText="Error!" icon={BugIcon}>
+            <EmptyState titleText="Network error!" icon={NetworkIcon}>
+                <EmptyStateBody>Unable to reach the server! Try again later...</EmptyStateBody>
+            </EmptyState>
+        </Bullseye>
+    );
+}
+
+function UnknownErrorPage() {
+    return (
+        <Bullseye>
+            <EmptyState titleText="Unknown error!" icon={BugIcon}>
                 <EmptyStateBody>Check logs for details...</EmptyStateBody>
             </EmptyState>
         </Bullseye>
@@ -35,33 +47,6 @@ type Props = {
     accessChecker: () => Promise<void>;
     children: React.ReactNode;
 };
-
-function getHttpStatus(err: unknown): number | undefined {
-    if (typeof err !== "object" || err === null) {
-        return undefined;
-    }
-
-    if (!("response" in err)) {
-        return undefined;
-    }
-    const response = err.response;
-
-    if (typeof response !== "object" || response === null) {
-        return undefined;
-    }
-
-    if (!("status" in response)) {
-        return undefined;
-    }
-    const status = response.status;
-
-    if (typeof status !== "number" || status === null) {
-        return undefined;
-    }
-
-    return status;
-}
-
 
 export default function AccessGuard({ accessChecker, children }: Props) {
     const [state, setState] = React.useState<AccessState>("checking");
@@ -74,16 +59,19 @@ export default function AccessGuard({ accessChecker, children }: Props) {
                 await accessChecker();
                 if (cancelled) return;
                 setState("allowed");
-            } catch (err) {
+            } catch (unknownError) {
                 if (cancelled) return;
-                const status = getHttpStatus(err);
-                console.log(status);
+                const parsedError = await parseApiFetchError(unknownError)
 
-                if (status === 401 || status === 403) {
-                    setState("denied");
-                } if (status === undefined) {
-                    console.log(err);
-                    setState("error");
+                if (parsedError.kind == "http") {
+                    if (parsedError.status === 401 || parsedError.status === 403) {
+                        setState("denied");
+                    }
+                } else if (parsedError.kind == "network") {
+                    setState("network-error");
+                } else {
+                    console.log(parsedError);
+                    setState("unknown-error");
                 }
             }
         })();
@@ -95,6 +83,8 @@ export default function AccessGuard({ accessChecker, children }: Props) {
 
     if (state === "checking") return <FullPageSpinner />;
     if (state === "denied") return <AccessDenied />;
-    if (state === "error") return <ErrorPage />;
+    if (state === "network-error") return <NetworkErrorPage />;
+    if (state === "unknown-error") return <UnknownErrorPage />;
+
     return <>{children}</>;
 }

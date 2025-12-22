@@ -14,15 +14,19 @@
   background: color-mix(in srgb-linear, var(--app-color-os-nav-gray), white 5%);
 }
 
-.nav-expandable-title{
+.center-title{
   display: inline-flex;
   align-items: center;
   line-height: 1;
 }
 
-.nav-expandable-title img {
+.icon {
   height: 1.5em;
   width: 1.5em;
   margin-right: 1rem;
   flex-shrink: 0;
+}
+
+.inverted {
+  filter: invert();
 }

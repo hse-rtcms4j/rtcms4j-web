@@ -11,7 +11,7 @@ docs/ConfigurationDto.md
 docs/ConfigurationDtoCreateRequest.md
 docs/ConfigurationDtoUpdateRequest.md
 docs/CoreApi.md
-docs/ErrorResponse.md
+docs/ErrorResponseDto.md
 docs/KeycloakClientDto.md
 docs/NamespaceCreateRequest.md
 docs/NamespaceDto.md
@@ -34,7 +34,7 @@ models/ConfigurationDetailedDto.ts
 models/ConfigurationDto.ts
 models/ConfigurationDtoCreateRequest.ts
 models/ConfigurationDtoUpdateRequest.ts
-models/ErrorResponse.ts
+models/ErrorResponseDto.ts
 models/KeycloakClientDto.ts
 models/NamespaceCreateRequest.ts
 models/NamespaceDto.ts

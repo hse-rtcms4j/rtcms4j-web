@@ -1,15 +1,26 @@
 import {
     Card,
     CardBody,
-    CardTitle
+    CardTitle,
+    Flex,
+    FlexItem,
 } from "@patternfly/react-core";
 
-export default function SystemPage() {
-    // TODO: system page
+export default function NamespacesGreetingPage() {
     return (
-        <Card ouiaId="BasicCard">
-            <CardTitle>Create</CardTitle>
-            <CardBody>Select any action on the left bar.</CardBody>
-        </Card>
+        <Flex direction={{ default: 'column' }}>
+            <FlexItem>
+                <Card ouiaId="BasicCard">
+                    <CardTitle>Web UI</CardTitle>
+                    <CardBody>Realtime Configuration Management System for Java - web control panel stats</CardBody>
+                </Card>
+            </FlexItem>
+            <FlexItem>
+                <Card ouiaId="BasicCard">
+                    <CardTitle>Version</CardTitle>
+                    <CardBody>{import.meta.env.VITE_APP_VERSION}</CardBody>
+                </Card>
+            </FlexItem>
+        </Flex>
     )
 }

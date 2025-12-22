@@ -34,8 +34,8 @@ export default function AppLayout() {
                     <NavList>
                         <NavExpandable
                             title={
-                                <span className="nav-expandable-title">
-                                    <img src={namespacesSvg} />
+                                <span className="center-title">
+                                    <img src={namespacesSvg} className="icon"/>
                                     <span>Namespaces</span>
                                 </span>
                             }
@@ -53,8 +53,8 @@ export default function AppLayout() {
                         </NavExpandable>
                         <NavExpandable
                             title={
-                                <span className="nav-expandable-title">
-                                    <img src={gearSvg} />
+                                <span className="center-title">
+                                    <img src={gearSvg} className="icon" />
                                     <span>System</span>
                                 </span>
                             }
