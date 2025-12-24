@@ -22,7 +22,7 @@ docs/PagedModelApplicationDto.md
 docs/PagedModelConfigurationDto.md
 docs/PagedModelNamespaceDto.md
 docs/SourceType.md
-docs/UserInfoDto.md
+docs/UserRoleDto.md
 index.ts
 models/ApplicationCreateRequest.ts
 models/ApplicationDto.ts
@@ -45,6 +45,6 @@ models/PagedModelApplicationDto.ts
 models/PagedModelConfigurationDto.ts
 models/PagedModelNamespaceDto.ts
 models/SourceType.ts
-models/UserInfoDto.ts
+models/UserRoleDto.ts
 models/index.ts
 runtime.ts

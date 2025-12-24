@@ -20,7 +20,7 @@ export default function AccessDenied() {
                         <Brand src={skullSvg} alt="Skull icon" style={{ height: '5em' }} />
                     </CardHeader>
                     <CardTitle>Access Denied</CardTitle>
-                    <CardBody>You dont have permissions to access this page.</CardBody>
+                    <CardBody>You do not have permissions to access this page.</CardBody>
                 </Card>
             </PageSection>
         </Page>

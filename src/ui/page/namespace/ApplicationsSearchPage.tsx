@@ -13,13 +13,15 @@ import {
 } from "@patternfly/react-core";
 import { useState, useEffect } from "react";
 import CubesIcon from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
+import { useNavigate, useRouteLoaderData } from "react-router-dom";
 import { coreApi } from "@/api/client";
-import type { PagedModelNamespaceDto } from "@/api/generated";
-import namespaceSvg from "/namespace.svg"
+import type { NamespaceDto, PagedModelApplicationDto } from "@/api/generated";
+import applicationSvg from "/application.svg"
+import { buildApplicationPath } from "@/router";
 
-function useNamespaces(name: string | undefined, pageNumber: number, pageSize: number) {
+function useApplications(namespaceId: number, name: string | undefined, pageNumber: number, pageSize: number) {
     const [state, setState] = useState<{
-        pagedModel: PagedModelNamespaceDto | undefined;
+        pagedModel: PagedModelApplicationDto | undefined;
         loading: boolean;
     }>({ pagedModel: undefined, loading: true });
 
@@ -30,7 +32,8 @@ function useNamespaces(name: string | undefined, pageNumber: number, pageSize: n
 
         (async () => {
             try {
-                const namespaces = await coreApi.findAllNamespaces({
+                const namespaces = await coreApi.findAllApplications({
+                    nid: namespaceId,
                     name,
                     pageable: { page: pageNumber, size: pageSize },
                 });
@@ -43,27 +46,30 @@ function useNamespaces(name: string | undefined, pageNumber: number, pageSize: n
         return () => {
             cancelled = true;
         };
-    }, [name, pageNumber, pageSize]);
+    }, [namespaceId, name, pageNumber, pageSize]);
 
     return state;
 }
 
 
 export default function NamespacesSearchPage() {
+    const navigate = useNavigate();
+    const { namespace } = useRouteLoaderData("namespace-layout") as { globalAccess: boolean, namespace: NamespaceDto };
+
     const [inputValue, setInputValue] = useState("");
     const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined);
 
     const [page, setPage] = useState(1);
-    const [perPage, setPerPage] = useState(20);
+    const [perPage, setPerPage] = useState(10);
 
-    const namespaces = useNamespaces(searchTerm, page - 1, perPage);
+    const applicationsWrapper = useApplications(namespace.id, searchTerm, page - 1, perPage);
 
     return (
         <Flex direction={{ default: 'column' }}>
             <FlexItem>
                 <Card ouiaId="BasicCard">
-                    <CardTitle>Search namespaces</CardTitle>
-                    <CardBody>A namespace is a set of applications restricted for some users and serving program clients. Mainly dedicated to separate development teams' fields.</CardBody>
+                    <CardTitle>Search namespace {namespace.name} applications</CardTitle>
+                    <CardBody>An application is a container of configurations for serving programs. One program instance expected to access its application configurations.</CardBody>
                 </Card>
             </FlexItem>
             <FlexItem>
@@ -71,7 +77,7 @@ export default function NamespacesSearchPage() {
                     <FlexItem>
                         <SearchInput
                             aria-label="Search basic"
-                            placeholder="Find by name"
+                            placeholder="Find by application name"
                             value={inputValue}
                             onChange={(_event, value) => setInputValue(value)}
                             onSearch={(_event, value) => {
@@ -89,7 +95,7 @@ export default function NamespacesSearchPage() {
                         <Pagination
                             widgetId="pagination-top"
                             ouiaId="PaginationTop"
-                            itemCount={namespaces?.pagedModel?.page?.totalElements ?? 0}
+                            itemCount={applicationsWrapper?.pagedModel?.page?.totalElements ?? 0}
                             perPage={perPage}
                             page={page}
                             onSetPage={(_e, value) => setPage(value)}
@@ -101,31 +107,31 @@ export default function NamespacesSearchPage() {
             <FlexItem>
                 <Divider />
             </FlexItem>
-            {namespaces?.loading ? (
+            {applicationsWrapper?.loading ? (
                 <FlexItem>
                     <EmptyState titleText="Loading..." headingLevel="h4" icon={Spinner}>
                     </EmptyState>
                 </FlexItem>
-            ) : namespaces?.pagedModel?.content?.length === 0 ? (
+            ) : applicationsWrapper?.pagedModel?.content?.length === 0 ? (
                 <FlexItem>
-                    <EmptyState titleText="No namespaces found" headingLevel="h4" icon={CubesIcon} />
+                    <EmptyState titleText="No applications found" headingLevel="h4" icon={CubesIcon} />
                 </FlexItem>
             ) : (
-                namespaces?.pagedModel?.content?.map(ns => (
-                    <FlexItem key={ns.id}>
+                applicationsWrapper?.pagedModel?.content?.map(app => (
+                    <FlexItem key={app.id}>
                         <Card isCompact isClickable>
                             <CardHeader
                                 selectableActions={{
-                                    onClickAction: () => console.log(`Clicked!`),
+                                    onClickAction: () => navigate(buildApplicationPath(app.namespaceId, app.id)),
                                     selectableActionAriaLabelledby: 'clickable-card'
                                 }}
                             >
                                 <CardTitle className="center-title">
-                                    <img src={namespaceSvg} className="icon inverted" />
-                                    <span>Namespace: {ns.name}</span>
+                                    <img src={applicationSvg} className="icon inverted" />
+                                    <span>Application: {app.name}</span>
                                 </CardTitle>
                             </CardHeader>
-                            <CardBody>Description: {ns.description ?? 'not present'}</CardBody>
+                            <CardBody>Description: {app.description ?? 'no description'}</CardBody>
                         </Card>
                     </FlexItem>
                 )

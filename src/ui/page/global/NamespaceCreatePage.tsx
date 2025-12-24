@@ -18,7 +18,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { coreApi } from "@/api/client";
 import parseApiFetchError from "@/api/error-handler";
-import { useToast } from "@/ui/util/AlertsAnchor";
+import { useToast } from "@/ui/util/alerts-anchor";
+import { buildNamespacePath } from "@/router"
 
 
 export default function NamespaceCreatePage() {
@@ -37,7 +38,7 @@ export default function NamespaceCreatePage() {
             const response = await coreApi.createNamespace({ namespaceCreateRequest: { name: requestName, description: description } });
 
             addAlert("Success!", "success", `Created namespace ${response.name}.`, 2_000);
-            navigate("/") // TODO: navigate to created namespace
+            navigate(buildNamespacePath(response.id));
         } catch (unknownError) {
             const parsedError = await parseApiFetchError(unknownError)
 

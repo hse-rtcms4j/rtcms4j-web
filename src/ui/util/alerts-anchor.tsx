@@ -16,6 +16,7 @@ type ToastContextValue = {
 
 const ToastContext = createContext<ToastContextValue | null>(null);
 
+
 export function AlertsAnchor({ children }: { children: React.ReactNode }) {
     const [alerts, setAlerts] = useState<ToastAlert[]>([]);
     const maxDisplayed = 4;

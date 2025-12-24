@@ -21,4 +21,4 @@ export * from './PagedModelApplicationDto';
 export * from './PagedModelConfigurationDto';
 export * from './PagedModelNamespaceDto';
 export * from './SourceType';
-export * from './UserInfoDto';
+export * from './UserRoleDto';

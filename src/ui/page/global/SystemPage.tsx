@@ -6,6 +6,7 @@ import {
     FlexItem,
 } from "@patternfly/react-core";
 
+
 export default function NamespacesGreetingPage() {
     return (
         <Flex direction={{ default: 'column' }}>

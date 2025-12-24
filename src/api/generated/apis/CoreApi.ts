@@ -34,7 +34,7 @@ import type {
   PagedModelApplicationDto,
   PagedModelConfigurationDto,
   PagedModelNamespaceDto,
-  UserInfoDto,
+  UserRoleDto,
 } from '../models/index';
 import {
     ApplicationCreateRequestFromJSON,
@@ -75,8 +75,8 @@ import {
     PagedModelConfigurationDtoToJSON,
     PagedModelNamespaceDtoFromJSON,
     PagedModelNamespaceDtoToJSON,
-    UserInfoDtoFromJSON,
-    UserInfoDtoToJSON,
+    UserRoleDtoFromJSON,
+    UserRoleDtoToJSON,
 } from '../models/index';
 
 export interface AddApplicationManagerRequest {
@@ -252,7 +252,7 @@ export class CoreApi extends runtime.BaseAPI {
     /**
      * Add namespace application manager
      */
-    async addApplicationManagerRaw(requestParameters: AddApplicationManagerRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserInfoDto>> {
+    async addApplicationManagerRaw(requestParameters: AddApplicationManagerRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['nid'] == null) {
             throw new runtime.RequiredError(
                 'nid',
@@ -299,21 +299,20 @@ export class CoreApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => UserInfoDtoFromJSON(jsonValue));
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
      * Add namespace application manager
      */
-    async addApplicationManager(requestParameters: AddApplicationManagerRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserInfoDto> {
-        const response = await this.addApplicationManagerRaw(requestParameters, initOverrides);
-        return await response.value();
+    async addApplicationManager(requestParameters: AddApplicationManagerRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.addApplicationManagerRaw(requestParameters, initOverrides);
     }
 
     /**
      * Add namespace admin
      */
-    async addNamespaceAdminRaw(requestParameters: AddNamespaceAdminRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserInfoDto>> {
+    async addNamespaceAdminRaw(requestParameters: AddNamespaceAdminRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['nid'] == null) {
             throw new runtime.RequiredError(
                 'nid',
@@ -352,15 +351,14 @@ export class CoreApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => UserInfoDtoFromJSON(jsonValue));
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
      * Add namespace admin
      */
-    async addNamespaceAdmin(requestParameters: AddNamespaceAdminRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserInfoDto> {
-        const response = await this.addNamespaceAdminRaw(requestParameters, initOverrides);
-        return await response.value();
+    async addNamespaceAdmin(requestParameters: AddNamespaceAdminRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.addNamespaceAdminRaw(requestParameters, initOverrides);
     }
 
     /**
@@ -1159,7 +1157,7 @@ export class CoreApi extends runtime.BaseAPI {
     /**
      * Get namespace application managers
      */
-    async getApplicationManagersRaw(requestParameters: GetApplicationManagersRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserInfoDto>>> {
+    async getApplicationManagersRaw(requestParameters: GetApplicationManagersRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserRoleDto>>> {
         if (requestParameters['nid'] == null) {
             throw new runtime.RequiredError(
                 'nid',
@@ -1198,13 +1196,13 @@ export class CoreApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserInfoDtoFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserRoleDtoFromJSON));
     }
 
     /**
      * Get namespace application managers
      */
-    async getApplicationManagers(requestParameters: GetApplicationManagersRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserInfoDto>> {
+    async getApplicationManagers(requestParameters: GetApplicationManagersRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserRoleDto>> {
         const response = await this.getApplicationManagersRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -1448,7 +1446,7 @@ export class CoreApi extends runtime.BaseAPI {
     /**
      * Get namespace admins
      */
-    async getNamespaceAdminsRaw(requestParameters: GetNamespaceAdminsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserInfoDto>>> {
+    async getNamespaceAdminsRaw(requestParameters: GetNamespaceAdminsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserRoleDto>>> {
         if (requestParameters['nid'] == null) {
             throw new runtime.RequiredError(
                 'nid',
@@ -1479,13 +1477,13 @@ export class CoreApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserInfoDtoFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserRoleDtoFromJSON));
     }
 
     /**
      * Get namespace admins
      */
-    async getNamespaceAdmins(requestParameters: GetNamespaceAdminsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserInfoDto>> {
+    async getNamespaceAdmins(requestParameters: GetNamespaceAdminsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserRoleDto>> {
         const response = await this.getNamespaceAdminsRaw(requestParameters, initOverrides);
         return await response.value();
     }

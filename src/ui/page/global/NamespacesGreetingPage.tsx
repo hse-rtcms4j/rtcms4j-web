@@ -4,6 +4,7 @@ import {
     CardTitle
 } from "@patternfly/react-core";
 
+
 export default function NamespacesGreetingPage() {
     return (
         <Card ouiaId="BasicCard">

@@ -12,10 +12,11 @@ import {
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { AppHeaderWithSidebar } from "@/ui/component/AppHeader";
-import "@/ui/NamespacesLayout.css";
+import "@/ui/layouts.css";
 import namespacesSvg from "/namespaces.svg"
 import gearSvg from "/gear.svg"
-import { namespacesPath, namespaceCreateSubpath, namespacesSearchSubpath } from "@/router"
+import { namespacesPath, namespaceCreateSubpath, namespacesSearchSubpath, systemSubpath } from "@/router"
+
 
 export default function AppLayout() {
     const [isNavOpen, setIsNavOpen] = useState(true);
@@ -35,14 +36,14 @@ export default function AppLayout() {
                         <NavExpandable
                             title={
                                 <span className="center-title">
-                                    <img src={namespacesSvg} className="icon"/>
+                                    <img src={namespacesSvg} className="icon" />
                                     <span>Namespaces</span>
                                 </span>
                             }
                         >
                             <NavItem>
                                 <NavLink to={namespacesPath + namespacesSearchSubpath}>
-                                   Search namespaces
+                                    Search namespaces
                                 </NavLink>
                             </NavItem>
                             <NavItem>
@@ -60,7 +61,7 @@ export default function AppLayout() {
                             }
                         >
                             <NavItem>
-                                <NavLink to="/system">
+                                <NavLink to={namespacesPath + systemSubpath}>
                                     Web UI
                                 </NavLink>
                             </NavItem>

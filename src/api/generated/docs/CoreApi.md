@@ -40,7 +40,7 @@ All URIs are relative to */api/v1*
 
 ## addApplicationManager
 
-> UserInfoDto addApplicationManager(nid, aid, uid)
+> addApplicationManager(nid, aid, uid)
 
 Add namespace application manager
 
@@ -93,7 +93,7 @@ example().catch(console.error);
 
 ### Return type
 
-[**UserInfoDto**](UserInfoDto.md)
+`void` (Empty response body)
 
 ### Authorization
 
@@ -108,10 +108,11 @@ example().catch(console.error);
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **201** | Successful operation |  -  |
+| **204** | Successful operation |  -  |
 | **400** | Wrong or unexpected |  -  |
 | **401** | Wrong token or authorization failed |  -  |
 | **403** | Not enough permissions to access |  -  |
+| **404** | User not found |  -  |
 | **405** | Wrong method |  -  |
 | **500** | Error on server side |  -  |
 
@@ -120,7 +121,7 @@ example().catch(console.error);
 
 ## addNamespaceAdmin
 
-> UserInfoDto addNamespaceAdmin(nid, uid)
+> addNamespaceAdmin(nid, uid)
 
 Add namespace admin
 
@@ -170,7 +171,7 @@ example().catch(console.error);
 
 ### Return type
 
-[**UserInfoDto**](UserInfoDto.md)
+`void` (Empty response body)
 
 ### Authorization
 
@@ -185,10 +186,11 @@ example().catch(console.error);
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **201** | Successful operation |  -  |
+| **204** | Successful operation |  -  |
 | **400** | Wrong or unexpected |  -  |
 | **401** | Wrong token or authorization failed |  -  |
 | **403** | Not enough permissions to access |  -  |
+| **404** | User not found |  -  |
 | **405** | Wrong method |  -  |
 | **500** | Error on server side |  -  |
 
@@ -1308,7 +1310,7 @@ example().catch(console.error);
 
 ## getApplicationManagers
 
-> Array&lt;UserInfoDto&gt; getApplicationManagers(nid, aid)
+> Array&lt;UserRoleDto&gt; getApplicationManagers(nid, aid)
 
 Get namespace application managers
 
@@ -1358,7 +1360,7 @@ example().catch(console.error);
 
 ### Return type
 
-[**Array&lt;UserInfoDto&gt;**](UserInfoDto.md)
+[**Array&lt;UserRoleDto&gt;**](UserRoleDto.md)
 
 ### Authorization
 
@@ -1705,7 +1707,7 @@ example().catch(console.error);
 
 ## getNamespaceAdmins
 
-> Array&lt;UserInfoDto&gt; getNamespaceAdmins(nid)
+> Array&lt;UserRoleDto&gt; getNamespaceAdmins(nid)
 
 Get namespace admins
 
@@ -1752,7 +1754,7 @@ example().catch(console.error);
 
 ### Return type
 
-[**Array&lt;UserInfoDto&gt;**](UserInfoDto.md)
+[**Array&lt;UserRoleDto&gt;**](UserRoleDto.md)
 
 ### Authorization
 
