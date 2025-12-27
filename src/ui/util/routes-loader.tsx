@@ -70,7 +70,7 @@ export async function applicationLayoutLoader({ params }: LoaderFunctionArgs) {
     try {
         const application = await coreApi.getApplication({ nid: namespaceId, aid: applicationId });
 
-        return { globalAccess, namespace, application };
+        return { globalAccess, namespaceId, namespace, application };
     } catch (unknownError) {
         const parsedError = await parseApiFetchError(unknownError);
         throw new AppRouteError(parsedError);
@@ -98,7 +98,7 @@ export async function configurationLayoutLoader({ params }: LoaderFunctionArgs) 
         const application = await coreApi.getApplication({ nid: namespaceId, aid: applicationId });
         const configuration = await coreApi.getConfiguration({ nid: namespaceId, aid: applicationId, cid: configurationId });
 
-        return { globalAccess, namespace, application, configuration };
+        return { globalAccess, namespaceId, namespace, application, configuration };
     } catch (unknownError) {
         const parsedError = await parseApiFetchError(unknownError);
         throw new AppRouteError(parsedError);

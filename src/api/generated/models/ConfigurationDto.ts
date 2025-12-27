@@ -59,6 +59,12 @@ export interface ConfigurationDto {
     schemaSourceType: SourceType;
     /**
      * 
+     * @type {string}
+     * @memberof ConfigurationDto
+     */
+    commitVersion?: string;
+    /**
+     * 
      * @type {number}
      * @memberof ConfigurationDto
      */
@@ -94,6 +100,7 @@ export function ConfigurationDtoFromJSONTyped(json: any, ignoreDiscriminator: bo
         'applicationId': json['applicationId'],
         'name': json['name'],
         'schemaSourceType': SourceTypeFromJSON(json['schemaSourceType']),
+        'commitVersion': json['commitVersion'] == null ? undefined : json['commitVersion'],
         'commitId': json['commitId'] == null ? undefined : json['commitId'],
     };
 }
@@ -114,6 +121,7 @@ export function ConfigurationDtoToJSONTyped(value?: ConfigurationDto | null, ign
         'applicationId': value['applicationId'],
         'name': value['name'],
         'schemaSourceType': SourceTypeToJSON(value['schemaSourceType']),
+        'commitVersion': value['commitVersion'],
         'commitId': value['commitId'],
     };
 }

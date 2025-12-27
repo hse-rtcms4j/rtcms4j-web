@@ -3,7 +3,7 @@ import {
     commonLoader,
     namespacesLayoutLoader,
     namespaceLayoutLoader,
-    //     applicationLayoutLoader,
+    applicationLayoutLoader,
     //     configurationLayoutLoader
 } from "@/ui/util/routes-loader";
 import ErrorsPage from "@/ui/util/ErrorsPage";
@@ -21,6 +21,14 @@ import NamespaceSettingsPage from "@/ui/page/namespace/NamespaceSettingsPage";
 import NamespaceAdminsPage from "@/ui/page/namespace/NamespaceAdminsPage";
 import ApplicationsSearchPage from "@/ui/page/namespace/ApplicationsSearchPage";
 import ApplicationCreatePage from "@/ui/page/namespace/ApplicationCreatePage";
+// app pages
+import ApplicationLayout from "@/ui/ApplicationLayout";
+import ApplicationGreetingPage from "@/ui/page/application/ApplicationGreetingPage";
+import ApplicationSettingsPage from "@/ui/page/application/ApplicationSettingsPage";
+import ApplicationManagersPage from "@/ui/page/application/ApplicationManagersPage";
+import ConfigurationsSearchPage from "@/ui/page/application/ConfigurationsSearchPage";
+import ConfigurationCreatePage from "@/ui/page/application/ConfigurationCreatePage";
+
 // global pages
 export const namespacesPath = "/"
 export const namespacesSearchSubpath = "namespaces-search"
@@ -30,7 +38,7 @@ export const systemSubpath = "system"
 export const namespaceIdKey = ":namespaceId";
 export const namespacePath = namespacesPath + `namespace/${namespaceIdKey}/`
 export function buildNamespacePath(namespaceId: number) {
-    return namespacePath.replace(namespaceIdKey, namespaceId.toString())
+    return namespacePath.replace(namespaceIdKey, namespaceId.toString());
 }
 export const namespaceSettingsSubpath = "settings"
 export const namespaceAdminsSubpath = "admins"
@@ -40,9 +48,22 @@ export const applicationCreateSubpath = "applications-create"
 export const applicationIdKey = ":applicationId";
 export const applicationPath = namespacePath + `application/${applicationIdKey}/`
 export function buildApplicationPath(namespaceId: number, applicationId: number) {
-    return applicationPath.replace(namespaceIdKey, namespaceId.toString()).replace(applicationIdKey, applicationId.toString())
+    return applicationPath.replace(namespaceIdKey, namespaceId.toString()).replace(applicationIdKey, applicationId.toString());
 }
-// TODO: application pages
+export const applicationSettingsSubpath = "settings"
+export const applicationManagersSubpath = "managers"
+export const configurationsSearchSubpath = "configurations-search"
+export const configurationCreateSubpath = "configurations-create"
+// config pages
+export const configurationIdKey = ":configurationId";
+export const configurationPath = applicationPath + `configuration/${configurationIdKey}/`
+export function buildConfigurationPath(namespaceId: number, applicationId: number, configurationId: number) {
+    return configurationPath
+        .replace(namespaceIdKey, namespaceId.toString())
+        .replace(applicationIdKey, applicationId.toString())
+        .replace(configurationIdKey, configurationId.toString());
+}
+
 
 export const router = createBrowserRouter([
     {
@@ -74,6 +95,21 @@ export const router = createBrowserRouter([
                     { path: namespaceAdminsSubpath, element: <NamespaceAdminsPage /> },
                     { path: applicationsSearchSubpath, element: <ApplicationsSearchPage /> },
                     { path: applicationCreateSubpath, element: <ApplicationCreatePage /> },
+                ],
+                errorElement: <ErrorsPage />
+            },
+
+            {
+                id: "application-layout",
+                path: applicationPath,
+                loader: applicationLayoutLoader,
+                element: <ApplicationLayout />,
+                children: [
+                    { index: true, element: <ApplicationGreetingPage /> },
+                    { path: applicationSettingsSubpath, element: <ApplicationSettingsPage /> },
+                    { path: applicationManagersSubpath, element: <ApplicationManagersPage /> },
+                    { path: configurationsSearchSubpath, element: <ConfigurationsSearchPage /> },
+                    { path: configurationCreateSubpath, element: <ConfigurationCreatePage /> },
                 ],
                 errorElement: <ErrorsPage />
             },

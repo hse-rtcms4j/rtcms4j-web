@@ -101,7 +101,6 @@ export default function NamespaceCreatePage() {
                             </FormGroup>
                             <ActionGroup>
                                 <Button variant="primary" onClick={handleCreateNamespace}>Submit</Button>
-                                <Button variant="link">Cancel</Button>
                             </ActionGroup>
                         </Form>
                     </CardBody>

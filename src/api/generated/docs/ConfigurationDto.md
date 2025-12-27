@@ -11,6 +11,7 @@ Name | Type
 `applicationId` | number
 `name` | string
 `schemaSourceType` | [SourceType](SourceType.md)
+`commitVersion` | string
 `commitId` | number
 
 ## Example
@@ -25,6 +26,7 @@ const example = {
   "applicationId": null,
   "name": null,
   "schemaSourceType": null,
+  "commitVersion": null,
   "commitId": null,
 } satisfies ConfigurationDto
 

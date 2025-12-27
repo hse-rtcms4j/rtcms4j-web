@@ -59,6 +59,12 @@ export interface ConfigurationDetailedDto {
     schemaSourceType: SourceType;
     /**
      * 
+     * @type {string}
+     * @memberof ConfigurationDetailedDto
+     */
+    commitVersion?: string;
+    /**
+     * 
      * @type {number}
      * @memberof ConfigurationDetailedDto
      */
@@ -106,6 +112,7 @@ export function ConfigurationDetailedDtoFromJSONTyped(json: any, ignoreDiscrimin
         'applicationId': json['applicationId'],
         'name': json['name'],
         'schemaSourceType': SourceTypeFromJSON(json['schemaSourceType']),
+        'commitVersion': json['commitVersion'] == null ? undefined : json['commitVersion'],
         'commitId': json['commitId'] == null ? undefined : json['commitId'],
         'jsonValues': json['jsonValues'] == null ? undefined : json['jsonValues'],
         'jsonSchema': json['jsonSchema'] == null ? undefined : json['jsonSchema'],
@@ -128,6 +135,7 @@ export function ConfigurationDetailedDtoToJSONTyped(value?: ConfigurationDetaile
         'applicationId': value['applicationId'],
         'name': value['name'],
         'schemaSourceType': SourceTypeToJSON(value['schemaSourceType']),
+        'commitVersion': value['commitVersion'],
         'commitId': value['commitId'],
         'jsonValues': value['jsonValues'],
         'jsonSchema': value['jsonSchema'],

@@ -21,16 +21,16 @@ import {
 import { useRouteLoaderData } from "react-router-dom";
 import { useState, useEffect } from "react";
 import type { KeycloakProfile } from "keycloak-js";
-import type { NamespaceDto, UserRoleDto } from "@/api/generated";
+import type { ApplicationDto, NamespaceDto, UserRoleDto } from "@/api/generated";
 import { useToast } from "@/ui/util/alerts-anchor";
 import { coreApi } from "@/api/client";
 import parseApiFetchError from "@/api/error-handler";
 
-function useAdmins(nid: number, refreshKey: number) {
+function useManagers(nid: number, aid: number, refreshKey: number) {
     const [state, setState] = useState<{
-        admins: UserRoleDto[] | undefined;
+        managers: UserRoleDto[] | undefined;
         loading: boolean;
-    }>({ admins: undefined, loading: true });
+    }>({ managers: undefined, loading: true });
 
     useEffect(() => {
         let cancelled = false;
@@ -39,8 +39,8 @@ function useAdmins(nid: number, refreshKey: number) {
 
         (async () => {
             try {
-                const admins = await coreApi.getNamespaceAdmins({ nid });
-                if (!cancelled) setState({ admins: admins, loading: false });
+                const managers = await coreApi.getApplicationManagers({ nid, aid });
+                if (!cancelled) setState({ managers, loading: false });
             } catch {
                 if (!cancelled) setState(s => ({ ...s, loading: false }));
             }
@@ -62,7 +62,7 @@ const isValidUuid = (value: string) => uuidRegex.test(value);
 
 export default function NamespaceAdminsPage() {
     const { profile } = useRouteLoaderData("common") as { profile: KeycloakProfile };
-    const { namespace } = useRouteLoaderData("namespace-layout") as { globalAccess: boolean, namespace: NamespaceDto };
+    const { namespaceId, application } = useRouteLoaderData("application-layout") as { globalAccess: boolean, namespaceId: number, namespace: NamespaceDto | undefined, application: ApplicationDto };
 
     const { addAlert } = useToast();
 
@@ -70,15 +70,15 @@ export default function NamespaceAdminsPage() {
     const isValid = sub === "" || isValidUuid(sub);
 
     const [refreshKey, setRefreshKey] = useState(0);
-    const adminsWrapper = useAdmins(namespace.id, refreshKey);
+    const managersWrapper = useManagers(namespaceId, application.id, refreshKey);
 
-    const handleAdminGrant = async () => {
+    const handleManagerGrant = async () => {
         const requestSub = sub.trim()
 
         try {
-            await coreApi.addNamespaceAdmin({ nid: namespace.id, uid: requestSub });
+            await coreApi.addApplicationManager({ nid: namespaceId, aid: application.id, uid: requestSub });
 
-            addAlert("Granted!", "success", `Namespace ${namespace.name} admin: ${requestSub}.`, 2_000);
+            addAlert("Granted!", "success", `Application ${application.name} manager: ${requestSub}.`, 2_000);
             setRefreshKey(k => k + 1);
             setSub("");
         } catch (unknownError) {
@@ -90,7 +90,7 @@ export default function NamespaceAdminsPage() {
                 if (parsedError.dto?.detailMessage !== undefined) {
                     errorMessage = parsedError.dto?.detailMessage
                 } else if (parsedError.status === 409) {
-                    errorMessage = "Admin already assigned."
+                    errorMessage = "Manager already assigned."
                 } else if (parsedError.status === 400) {
                     errorMessage = "Wrong request!"
                 } else {
@@ -105,13 +105,13 @@ export default function NamespaceAdminsPage() {
         }
     };
 
-    const handleAdminRevoke = async (sub: string) => {
+    const handleManagerRevoke = async (sub: string) => {
         const requestSub = sub.trim()
 
         try {
-            await coreApi.removeNamespaceAdmin({ nid: namespace.id, uid: requestSub });
+            await coreApi.removeApplicationManager({ nid: namespaceId, aid: application.id, uid: requestSub });
 
-            addAlert("Revoked!", "success", `Namespace ${namespace.name} admin: ${requestSub}.`, 2_000);
+            addAlert("Revoked!", "success", `Application ${application.name} manager: ${requestSub}.`, 2_000);
             setRefreshKey(k => k + 1);
             setSub("");
         } catch (unknownError) {
@@ -123,7 +123,7 @@ export default function NamespaceAdminsPage() {
                 if (parsedError.dto?.detailMessage !== undefined) {
                     errorMessage = parsedError.dto?.detailMessage
                 } else if (parsedError.status === 404) {
-                    errorMessage = "Admin not found."
+                    errorMessage = "Manager not found."
                 } else if (parsedError.status === 400) {
                     errorMessage = "Wrong request!"
                 } else {
@@ -142,8 +142,8 @@ export default function NamespaceAdminsPage() {
         <Flex direction={{ default: 'column' }}>
             <FlexItem>
                 <Card ouiaId="BasicCard">
-                    <CardTitle>Namespace {namespace.name} admins</CardTitle>
-                    <CardBody>A namespace admin is a user, that allowed to modify namespace information and fully manage containing applications and their configurations.</CardBody>
+                    <CardTitle>Application {application.name} managers</CardTitle>
+                    <CardBody>An application manager is a user, that allowed to modify application information and fully manage its configurations.</CardBody>
                 </Card>
             </FlexItem>
             <FlexItem>
@@ -158,7 +158,7 @@ export default function NamespaceAdminsPage() {
                         </TextInputGroup>
                     </FlexItem>
                     <FlexItem>
-                        <Button variant="primary" onClick={handleAdminGrant} isDisabled={sub.length == 0 || !isValid} >Assign admin</Button>
+                        <Button variant="primary" onClick={handleManagerGrant} isDisabled={sub.length == 0 || !isValid} >Assign manager</Button>
                     </FlexItem>
                 </Flex>
             </FlexItem>
@@ -176,20 +176,20 @@ export default function NamespaceAdminsPage() {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {adminsWrapper?.loading ? (
+                        {managersWrapper?.loading ? (
                             ""
-                        ) : adminsWrapper?.admins?.length === 0 ? (
+                        ) : managersWrapper?.managers?.length === 0 ? (
                             ""
                         ) : (
-                            adminsWrapper?.admins?.map(admin => (
-                                <Tr key={admin.subject}>
-                                    <Td dataLabel="Subject name">{admin.username ?? "unknown"}</Td>
-                                    <Td dataLabel="Subject id">{admin.subject}{profile.id == admin.subject ? " (you)" : ""}</Td>
-                                    <Td dataLabel="Assigner id">{admin.assignerSubject}{profile.id == admin.assignerSubject ? " (you)" : ""}</Td>
+                            managersWrapper?.managers?.map(manager => (
+                                <Tr key={manager.subject}>
+                                    <Td dataLabel="Subject name">{manager.username ?? "unknown"}</Td>
+                                    <Td dataLabel="Subject id">{manager.subject}{profile.id == manager.subject ? " (you)" : ""}</Td>
+                                    <Td dataLabel="Assigner id">{manager.assignerSubject}{profile.id == manager.assignerSubject ? " (you)" : ""}</Td>
                                     <Td modifier="fitContent" hasAction>
-                                        {profile.id != admin.subject ?
+                                        {profile.id != manager.subject ?
                                             <TableText>
-                                                <Button variant="secondary" onClick={() => handleAdminRevoke(admin.subject)}>Revoke</Button>
+                                                <Button variant="secondary" onClick={() => handleManagerRevoke(manager.subject)}>Revoke</Button>
                                             </TableText>
                                             : ""
                                         }
