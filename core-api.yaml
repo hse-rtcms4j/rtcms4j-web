@@ -756,6 +756,12 @@ paths:
           schema:
             type: integer
             format: int64
+        - name: propagate
+          description: Propagate rotated secret
+          in: query
+          required: true
+          schema:
+            type: boolean
       responses:
         '200':
           description: Successful operation
@@ -1315,6 +1321,80 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+  ############################
+  # Available resources: #
+  ############################
+  /available/namespaces:
+    get:
+      tags:
+        - Core
+      summary: "Find available namespaces"
+      operationId: findAvailableNamespaces
+      parameters:
+        - name: name
+          description: Search by name param
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: pageable
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedModelNamespaceDto'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /available/applications:
+    get:
+      tags:
+        - Core
+      summary: "Find available  applications"
+      operationId: findAvailableApplications
+      parameters:
+        - name: name
+          description: Search by name param
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: pageable
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedModelApplicationDto'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -1517,6 +1597,7 @@ components:
         - namespaceId
         - name
         - description
+        - creationByService
       properties:
         id:
           type: integer
@@ -1528,17 +1609,22 @@ components:
           $ref: '#/components/schemas/ApplicationFieldName'
         description:
           $ref: '#/components/schemas/ApplicationFieldDescription'
+        creationByService:
+          type: boolean
 
     ApplicationCreateRequest:
       type: object
       required:
         - name
         - description
+        - creationByService
       properties:
         name:
           $ref: '#/components/schemas/ApplicationFieldName'
         description:
           $ref: '#/components/schemas/ApplicationFieldDescription'
+        creationByService:
+          type: boolean
 
     ApplicationUpdateRequest:
       type: object
@@ -1547,6 +1633,8 @@ components:
           $ref: '#/components/schemas/ApplicationFieldName'
         description:
           $ref: '#/components/schemas/ApplicationFieldDescription'
+        creationByService:
+          type: boolean
 
     ############################
     # Keycloak client:

@@ -1,26 +1,24 @@
 
-# ApplicationCreateRequest
+# AvailableResourcesDto
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`name` | string
-`description` | string
-`creationByService` | boolean
+`namespaces` | [PagedModelNamespaceDto](PagedModelNamespaceDto.md)
+`applications` | [PagedModelApplicationDto](PagedModelApplicationDto.md)
 
 ## Example
 
 ```typescript
-import type { ApplicationCreateRequest } from ''
+import type { AvailableResourcesDto } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "name": null,
-  "description": null,
-  "creationByService": null,
-} satisfies ApplicationCreateRequest
+  "namespaces": null,
+  "applications": null,
+} satisfies AvailableResourcesDto
 
 console.log(example)
 
@@ -29,7 +27,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as ApplicationCreateRequest
+const exampleParsed = JSON.parse(exampleJSON) as AvailableResourcesDto
 console.log(exampleParsed)
 ```
 

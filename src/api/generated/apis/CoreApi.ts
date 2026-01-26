@@ -159,6 +159,16 @@ export interface FindAllNamespacesRequest {
     pageable?: Pageable;
 }
 
+export interface FindAvailableApplicationsRequest {
+    name?: string;
+    pageable?: Pageable;
+}
+
+export interface FindAvailableNamespacesRequest {
+    name?: string;
+    pageable?: Pageable;
+}
+
 export interface GetApplicationRequest {
     nid: number;
     aid: number;
@@ -224,6 +234,7 @@ export interface RemoveNamespaceAdminRequest {
 export interface RotateApplicationClientPasswordRequest {
     nid: number;
     aid: number;
+    propagate: boolean;
 }
 
 export interface UpdateApplicationRequest {
@@ -1049,6 +1060,96 @@ export class CoreApi extends runtime.BaseAPI {
     }
 
     /**
+     * Find available  applications
+     */
+    async findAvailableApplicationsRaw(requestParameters: FindAvailableApplicationsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PagedModelApplicationDto>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['name'] != null) {
+            queryParameters['name'] = requestParameters['name'];
+        }
+
+        if (requestParameters['pageable'] != null) {
+            queryParameters['pageable'] = requestParameters['pageable'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/available/applications`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PagedModelApplicationDtoFromJSON(jsonValue));
+    }
+
+    /**
+     * Find available  applications
+     */
+    async findAvailableApplications(requestParameters: FindAvailableApplicationsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PagedModelApplicationDto> {
+        const response = await this.findAvailableApplicationsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Find available namespaces
+     */
+    async findAvailableNamespacesRaw(requestParameters: FindAvailableNamespacesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PagedModelNamespaceDto>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['name'] != null) {
+            queryParameters['name'] = requestParameters['name'];
+        }
+
+        if (requestParameters['pageable'] != null) {
+            queryParameters['pageable'] = requestParameters['pageable'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/available/namespaces`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PagedModelNamespaceDtoFromJSON(jsonValue));
+    }
+
+    /**
+     * Find available namespaces
+     */
+    async findAvailableNamespaces(requestParameters: FindAvailableNamespacesRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PagedModelNamespaceDto> {
+        const response = await this.findAvailableNamespacesRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Get namespace application
      */
     async getApplicationRaw(requestParameters: GetApplicationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ApplicationDto>> {
@@ -1750,7 +1851,18 @@ export class CoreApi extends runtime.BaseAPI {
             );
         }
 
+        if (requestParameters['propagate'] == null) {
+            throw new runtime.RequiredError(
+                'propagate',
+                'Required parameter "propagate" was null or undefined when calling rotateApplicationClientPassword().'
+            );
+        }
+
         const queryParameters: any = {};
+
+        if (requestParameters['propagate'] != null) {
+            queryParameters['propagate'] = requestParameters['propagate'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 

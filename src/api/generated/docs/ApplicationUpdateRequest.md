@@ -8,6 +8,7 @@ Name | Type
 ------------ | -------------
 `name` | string
 `description` | string
+`creationByService` | boolean
 
 ## Example
 
@@ -18,6 +19,7 @@ import type { ApplicationUpdateRequest } from ''
 const example = {
   "name": null,
   "description": null,
+  "creationByService": null,
 } satisfies ApplicationUpdateRequest
 
 console.log(example)

@@ -4,7 +4,7 @@ import {
     namespacesLayoutLoader,
     namespaceLayoutLoader,
     applicationLayoutLoader,
-    //     configurationLayoutLoader
+    configurationLayoutLoader
 } from "@/ui/util/routes-loader";
 import ErrorsPage from "@/ui/util/ErrorsPage";
 import NotFound from "@/ui/util/NotFound";
@@ -28,6 +28,11 @@ import ApplicationSettingsPage from "@/ui/page/application/ApplicationSettingsPa
 import ApplicationManagersPage from "@/ui/page/application/ApplicationManagersPage";
 import ConfigurationsSearchPage from "@/ui/page/application/ConfigurationsSearchPage";
 import ConfigurationCreatePage from "@/ui/page/application/ConfigurationCreatePage";
+// config pages
+import ConfigurationLayout from "./ui/ConfigurationLayout";
+import ConfigurationGreetingPage from "./ui/page/configuration/ConfigurationGreetingPage";
+import ConfigurationSettingsPage from "./ui/page/configuration/ConfigurationSettingsPage";
+import ConfigurationVersionsPage from "./ui/page/configuration/ConfigurationVersionsPage";
 
 // global pages
 export const namespacesPath = "/"
@@ -63,6 +68,8 @@ export function buildConfigurationPath(namespaceId: number, applicationId: numbe
         .replace(applicationIdKey, applicationId.toString())
         .replace(configurationIdKey, configurationId.toString());
 }
+export const configurationSettingsSubpath = "settings"
+export const configurationVersionsSubpath = "versions"
 
 
 export const router = createBrowserRouter([
@@ -110,6 +117,19 @@ export const router = createBrowserRouter([
                     { path: applicationManagersSubpath, element: <ApplicationManagersPage /> },
                     { path: configurationsSearchSubpath, element: <ConfigurationsSearchPage /> },
                     { path: configurationCreateSubpath, element: <ConfigurationCreatePage /> },
+                ],
+                errorElement: <ErrorsPage />
+            },
+
+            {
+                id: "configuration-layout",
+                path: configurationPath,
+                loader: configurationLayoutLoader,
+                element: <ConfigurationLayout />,
+                children: [
+                    { index: true, element: <ConfigurationGreetingPage /> },
+                    { path: configurationSettingsSubpath, element: <ConfigurationSettingsPage /> },
+                    { path: configurationVersionsSubpath, element: <ConfigurationVersionsPage /> },
                 ],
                 errorElement: <ErrorsPage />
             },

@@ -18,6 +18,8 @@ All URIs are relative to */api/v1*
 | [**findAllApplications**](CoreApi.md#findallapplications) | **GET** /namespace/{nid}/application | Get all namespace applications |
 | [**findAllConfigurations**](CoreApi.md#findallconfigurations) | **GET** /namespace/{nid}/application/{aid}/configuration | Get namespace application configurations |
 | [**findAllNamespaces**](CoreApi.md#findallnamespaces) | **GET** /namespace | Get all namespaces |
+| [**findAvailableApplications**](CoreApi.md#findavailableapplications) | **GET** /available/applications | Find available  applications |
+| [**findAvailableNamespaces**](CoreApi.md#findavailablenamespaces) | **GET** /available/namespaces | Find available namespaces |
 | [**getApplication**](CoreApi.md#getapplication) | **GET** /namespace/{nid}/application/{aid} | Get namespace application |
 | [**getApplicationClient**](CoreApi.md#getapplicationclient) | **GET** /namespace/{nid}/application/{aid}/client | Get namespace application client |
 | [**getApplicationManagers**](CoreApi.md#getapplicationmanagers) | **GET** /namespace/{nid}/application/{aid}/manager | Get namespace application managers |
@@ -1153,6 +1155,160 @@ example().catch(console.error);
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
+## findAvailableApplications
+
+> PagedModelApplicationDto findAvailableApplications(name, pageable)
+
+Find available  applications
+
+### Example
+
+```ts
+import {
+  Configuration,
+  CoreApi,
+} from '';
+import type { FindAvailableApplicationsRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: bearerAuth
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new CoreApi(config);
+
+  const body = {
+    // string | Search by name param (optional)
+    name: name_example,
+    // Pageable (optional)
+    pageable: ...,
+  } satisfies FindAvailableApplicationsRequest;
+
+  try {
+    const data = await api.findAvailableApplications(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **name** | `string` | Search by name param | [Optional] [Defaults to `undefined`] |
+| **pageable** | [](.md) |  | [Optional] [Defaults to `undefined`] |
+
+### Return type
+
+[**PagedModelApplicationDto**](PagedModelApplicationDto.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Successful operation |  -  |
+| **400** | Wrong or unexpected |  -  |
+| **401** | Wrong token or authorization failed |  -  |
+| **403** | Not enough permissions to access |  -  |
+| **405** | Wrong method |  -  |
+| **500** | Error on server side |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## findAvailableNamespaces
+
+> PagedModelNamespaceDto findAvailableNamespaces(name, pageable)
+
+Find available namespaces
+
+### Example
+
+```ts
+import {
+  Configuration,
+  CoreApi,
+} from '';
+import type { FindAvailableNamespacesRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: bearerAuth
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new CoreApi(config);
+
+  const body = {
+    // string | Search by name param (optional)
+    name: name_example,
+    // Pageable (optional)
+    pageable: ...,
+  } satisfies FindAvailableNamespacesRequest;
+
+  try {
+    const data = await api.findAvailableNamespaces(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **name** | `string` | Search by name param | [Optional] [Defaults to `undefined`] |
+| **pageable** | [](.md) |  | [Optional] [Defaults to `undefined`] |
+
+### Return type
+
+[**PagedModelNamespaceDto**](PagedModelNamespaceDto.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Successful operation |  -  |
+| **400** | Wrong or unexpected |  -  |
+| **401** | Wrong token or authorization failed |  -  |
+| **403** | Not enough permissions to access |  -  |
+| **405** | Wrong method |  -  |
+| **500** | Error on server side |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
 ## getApplication
 
 > ApplicationDto getApplication(nid, aid)
@@ -2157,7 +2313,7 @@ example().catch(console.error);
 
 ## rotateApplicationClientPassword
 
-> KeycloakClientDto rotateApplicationClientPassword(nid, aid)
+> KeycloakClientDto rotateApplicationClientPassword(nid, aid, propagate)
 
 Rotate namespace application client
 
@@ -2183,6 +2339,8 @@ async function example() {
     nid: 789,
     // number | Application id
     aid: 789,
+    // boolean | Propagate rotated secret
+    propagate: true,
   } satisfies RotateApplicationClientPasswordRequest;
 
   try {
@@ -2204,6 +2362,7 @@ example().catch(console.error);
 |------------- | ------------- | ------------- | -------------|
 | **nid** | `number` | Namespace id | [Defaults to `undefined`] |
 | **aid** | `number` | Application id | [Defaults to `undefined`] |
+| **propagate** | `boolean` | Propagate rotated secret | [Defaults to `undefined`] |
 
 ### Return type
 

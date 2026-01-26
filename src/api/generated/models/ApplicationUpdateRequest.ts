@@ -31,6 +31,12 @@ export interface ApplicationUpdateRequest {
      * @memberof ApplicationUpdateRequest
      */
     description?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ApplicationUpdateRequest
+     */
+    creationByService?: boolean;
 }
 
 /**
@@ -52,6 +58,7 @@ export function ApplicationUpdateRequestFromJSONTyped(json: any, ignoreDiscrimin
         
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
+        'creationByService': json['creationByService'] == null ? undefined : json['creationByService'],
     };
 }
 
@@ -68,6 +75,7 @@ export function ApplicationUpdateRequestToJSONTyped(value?: ApplicationUpdateReq
         
         'name': value['name'],
         'description': value['description'],
+        'creationByService': value['creationByService'],
     };
 }
 

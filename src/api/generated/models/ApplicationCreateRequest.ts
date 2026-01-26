@@ -31,6 +31,12 @@ export interface ApplicationCreateRequest {
      * @memberof ApplicationCreateRequest
      */
     description: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ApplicationCreateRequest
+     */
+    creationByService: boolean;
 }
 
 /**
@@ -39,6 +45,7 @@ export interface ApplicationCreateRequest {
 export function instanceOfApplicationCreateRequest(value: object): value is ApplicationCreateRequest {
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('description' in value) || value['description'] === undefined) return false;
+    if (!('creationByService' in value) || value['creationByService'] === undefined) return false;
     return true;
 }
 
@@ -54,6 +61,7 @@ export function ApplicationCreateRequestFromJSONTyped(json: any, ignoreDiscrimin
         
         'name': json['name'],
         'description': json['description'],
+        'creationByService': json['creationByService'],
     };
 }
 
@@ -70,6 +78,7 @@ export function ApplicationCreateRequestToJSONTyped(value?: ApplicationCreateReq
         
         'name': value['name'],
         'description': value['description'],
+        'creationByService': value['creationByService'],
     };
 }
 

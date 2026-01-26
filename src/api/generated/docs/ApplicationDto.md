@@ -10,6 +10,7 @@ Name | Type
 `namespaceId` | number
 `name` | string
 `description` | string
+`creationByService` | boolean
 
 ## Example
 
@@ -22,6 +23,7 @@ const example = {
   "namespaceId": null,
   "name": null,
   "description": null,
+  "creationByService": null,
 } satisfies ApplicationDto
 
 console.log(example)

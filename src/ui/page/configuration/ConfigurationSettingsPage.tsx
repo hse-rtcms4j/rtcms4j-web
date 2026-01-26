@@ -18,7 +18,6 @@ import {
     ModalFooter,
     ModalHeader,
     Spinner,
-    Switch,
     Tab,
     Tabs,
     TabTitleText,
@@ -70,12 +69,10 @@ function useKeycloakClient(namespaceId: number, applicationId: number, refreshKe
 export default function NamespaceSettingsPage() {
     const navigate = useNavigate();
     const revalidator = useRevalidator()
-    const { namespaceId, namespace, application } = useRouteLoaderData("application-layout") as { globalAccess: boolean, namespaceId: number, namespace: NamespaceDto | undefined, application: ApplicationDto };
+    const { globalAccess, namespaceId, namespace, application, configuration } = useRouteLoaderData("configuration-layout") as { globalAccess: boolean, namespaceId: number, namespace: NamespaceDto | undefined, application: ApplicationDto, configuration: ConfigurationDto };
 
     const { addAlert } = useToast();
 
-    const [isPropagateRotation, setIsPropagateRotation] = useState<boolean>(true);
-    const [isCreationByService, setIsCreationByService] = useState<boolean>(application.creationByService);
     const [name, setName] = useState(application.name);
     const [description, setDescription] = useState(application.description);
 
@@ -83,7 +80,7 @@ export default function NamespaceSettingsPage() {
         const requestName = name.trim();
 
         try {
-            const response = await coreApi.updateApplication({ nid: namespaceId, aid: application.id, applicationUpdateRequest: { name: requestName, description: description, creationByService: isCreationByService } });
+            const response = await coreApi.updateApplication({ nid: namespaceId, aid: application.id, applicationUpdateRequest: { name: requestName, description: description } });
 
             addAlert("Success!", "success", `Updated application ${response.name}.`, 2_000);
             revalidator.revalidate();
@@ -111,9 +108,9 @@ export default function NamespaceSettingsPage() {
         }
     };
 
-    const [isDeletionModalVisible, setDeletionModalVisible] = useState(false);
-    const openDeletionModal = () => setDeletionModalVisible(true);
-    const closeDeletionModal = () => setDeletionModalVisible(false);
+    const [isModalVisible, setModalVisible] = useState(false);
+    const openModal = () => setModalVisible(true);
+    const closeModal = () => setModalVisible(false);
 
     const handleDeleteApplication = async () => {
         try {
@@ -148,17 +145,12 @@ export default function NamespaceSettingsPage() {
     const [clientIdVisible, setClientIdVisible] = useState(false);
     const [clientSecretVisible, setClientSecretVisible] = useState(false);
 
-    const [isRotationModalVisible, setRotationModalVisible] = useState(false);
-    const openRotationModal = () => setRotationModalVisible(true);
-    const closeRotationModal = () => setRotationModalVisible(false);
-
     const handleRotateApplicationSecret = async () => {
         try {
-            await coreApi.rotateApplicationClientPassword({ nid: namespaceId, aid: application.id, propagate: isPropagateRotation });
+            await coreApi.rotateApplicationClientPassword({ nid: namespaceId, aid: application.id });
 
             addAlert("Success!", "success", `Rotated application client secret.`, 2_000);
             setRefreshKey(v => v + 1);
-            closeRotationModal();
         } catch (unknownError) {
             const parsedError = await parseApiFetchError(unknownError)
 
@@ -228,13 +220,6 @@ export default function NamespaceSettingsPage() {
                                                     name="horizontal-form-description"
                                                 />
                                             </FormGroup>
-                                            <Switch
-                                                id="simple-switch"
-                                                label="Allow configurations creation by services"
-                                                isChecked={isCreationByService}
-                                                onChange={(_, v) => { setIsCreationByService(v) }}
-                                                ouiaId="BasicSwitch"
-                                            />
                                             <ActionGroup>
                                                 <Button variant="primary" onClick={handleUpdateApplication}>Update</Button>
                                             </ActionGroup>
@@ -248,31 +233,31 @@ export default function NamespaceSettingsPage() {
                                         <CardTitle>Delete application {application.name}</CardTitle>
                                         <CardBody>Deletion of the application includes its managers and configurations.</CardBody>
                                         <CardFooter>
-                                            <Button variant="danger" onClick={openDeletionModal}>Delete application</Button>
+                                            <Button variant="danger" onClick={openModal}>Delete application</Button>
+                                            <Modal
+                                                variant="small"
+                                                isOpen={isModalVisible}
+                                                onClose={closeModal}
+                                            >
+                                                <ModalHeader title={`Delete entire ${application.name} application?`} labelId="variant-modal-title" />
+                                                <ModalBody id="modal-box-body-variant">
+                                                    Once deleted all configurations will be cascadingly permanently deleted. All working program instances will fail fetching application info and its configurations.
+                                                </ModalBody>
+                                                <ModalFooter>
+                                                    <Button variant="danger" onClick={handleDeleteApplication}>
+                                                        Delete {application.name} application!
+                                                    </Button>
+                                                    <Button key="cancel" variant="link" onClick={closeModal}>
+                                                        Cancel
+                                                    </Button>
+                                                </ModalFooter>
+                                            </Modal>
                                         </CardFooter>
                                     </Card>
                                 </FlexItem>
                                 : ""
                             }
                         </Flex>
-                        <Modal
-                            variant="small"
-                            isOpen={isDeletionModalVisible}
-                            onClose={closeDeletionModal}
-                        >
-                            <ModalHeader title={`Delete entire ${application.name} application?`} labelId="variant-modal-title" />
-                            <ModalBody id="modal-box-body-variant">
-                                Once deleted all configurations will be cascadingly permanently deleted. All working program instances will fail fetching application info and its configurations.
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button variant="danger" onClick={handleDeleteApplication}>
-                                    Delete {application.name} application!
-                                </Button>
-                                <Button key="cancel" variant="link" onClick={closeDeletionModal}>
-                                    Cancel
-                                </Button>
-                            </ModalFooter>
-                        </Modal>
                     </Tab>
                     <Tab eventKey={1} title={<TabTitleText>Program credentials</TabTitleText>}>
                         <Card ouiaId="BasicCard">
@@ -328,7 +313,7 @@ export default function NamespaceSettingsPage() {
                                                     </TextInputGroup>
                                                 </FlexItem>
                                                 <FlexItem>
-                                                    <Button variant="primary" onClick={openRotationModal}>Rotate secret</Button>
+                                                    <Button variant="primary" onClick={handleRotateApplicationSecret}>Rotate secret</Button>
                                                 </FlexItem>
                                             </Flex>
                                         </FormGroup>
@@ -337,38 +322,6 @@ export default function NamespaceSettingsPage() {
                                 }
                             </CardFooter>
                         </Card>
-                        <Modal
-                            variant="small"
-                            isOpen={isRotationModalVisible}
-                            onClose={closeRotationModal}
-                        >
-                            <ModalHeader title={`Rotate ${application.name} application client secret?`} labelId="variant-modal-title" />
-                            <ModalBody id="modal-box-body-variant">
-                                <Flex direction={{ default: 'row' }}>
-                                    <FlexItem>
-                                        Once secret rotated all working program instances will lose access to application info and its configurations.
-                                        To prevent this you can propagate secret rotation to application instances.
-                                    </FlexItem>
-                                    <FlexItem>
-                                        <Switch
-                                            id="simple-switch"
-                                            label="Propagate secret rotation"
-                                            isChecked={isPropagateRotation}
-                                            onChange={(_, v) => { setIsPropagateRotation(v) }}
-                                            ouiaId="PropagateSwitch"
-                                        />
-                                    </FlexItem>
-                                </Flex>
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button variant="danger" onClick={handleRotateApplicationSecret}>
-                                    Rotate secret
-                                </Button>
-                                <Button key="cancel" variant="link" onClick={closeRotationModal}>
-                                    Cancel
-                                </Button>
-                            </ModalFooter>
-                        </Modal>
                     </Tab>
                 </Tabs>
             </FlexItem>

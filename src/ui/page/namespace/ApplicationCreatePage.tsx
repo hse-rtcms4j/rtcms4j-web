@@ -11,6 +11,7 @@ import {
     FormHelperText,
     HelperText,
     HelperTextItem,
+    Switch,
     TextArea,
     TextInput,
 } from "@patternfly/react-core";
@@ -28,6 +29,7 @@ export default function NamespaceCreatePage() {
     const { namespace } = useRouteLoaderData("namespace-layout") as { globalAccess: boolean, namespace: NamespaceDto };
     const { addAlert } = useToast();
 
+    const [isCreationByService, setIsCreationByService] = useState<boolean>(true);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const handleNameChange = (_event: any, name: string) => { setName(name); };
@@ -37,7 +39,7 @@ export default function NamespaceCreatePage() {
         const requestName = name.trim()
 
         try {
-            const response = await coreApi.createApplication({ nid: namespace.id, applicationCreateRequest: { name: requestName, description: description } });
+            const response = await coreApi.createApplication({ nid: namespace.id, applicationCreateRequest: { name: requestName, description: description, creationByService: isCreationByService } });
 
             addAlert("Success!", "success", `Created application ${response.name}.`, 2_000);
             navigate(buildApplicationPath(response.namespaceId, response.id));
@@ -101,6 +103,13 @@ export default function NamespaceCreatePage() {
                                     name="horizontal-form-description"
                                 />
                             </FormGroup>
+                            <Switch
+                                id="simple-switch"
+                                label="Allow configurations creation by services"
+                                isChecked={isCreationByService}
+                                onChange={(_, v) => {setIsCreationByService(v)}}
+                                ouiaId="BasicSwitch"
+                            />
                             <ActionGroup>
                                 <Button variant="primary" onClick={handleCreateApplication}>Submit</Button>
                             </ActionGroup>

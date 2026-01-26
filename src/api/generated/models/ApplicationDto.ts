@@ -43,6 +43,12 @@ export interface ApplicationDto {
      * @memberof ApplicationDto
      */
     description: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ApplicationDto
+     */
+    creationByService: boolean;
 }
 
 /**
@@ -53,6 +59,7 @@ export function instanceOfApplicationDto(value: object): value is ApplicationDto
     if (!('namespaceId' in value) || value['namespaceId'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('description' in value) || value['description'] === undefined) return false;
+    if (!('creationByService' in value) || value['creationByService'] === undefined) return false;
     return true;
 }
 
@@ -70,6 +77,7 @@ export function ApplicationDtoFromJSONTyped(json: any, ignoreDiscriminator: bool
         'namespaceId': json['namespaceId'],
         'name': json['name'],
         'description': json['description'],
+        'creationByService': json['creationByService'],
     };
 }
 
@@ -88,6 +96,7 @@ export function ApplicationDtoToJSONTyped(value?: ApplicationDto | null, ignoreD
         'namespaceId': value['namespaceId'],
         'name': value['name'],
         'description': value['description'],
+        'creationByService': value['creationByService'],
     };
 }
 
