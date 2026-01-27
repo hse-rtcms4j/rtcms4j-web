@@ -6,8 +6,8 @@ import {
     applicationLayoutLoader,
     configurationLayoutLoader
 } from "@/ui/util/routes-loader";
-import ErrorsPage from "@/ui/util/ErrorsPage";
-import NotFound from "@/ui/util/NotFound";
+import ErrorsPage from "@/errors-router";
+import NotFoundPage from "@/ui/page/extra/NotFoundPage";
 // global pages
 import NamespacesLayout from "@/ui/NamespacesLayout";
 import NamespacesGreetingPage from "@/ui/page/global/NamespacesGreetingPage";
@@ -134,7 +134,9 @@ export const router = createBrowserRouter([
                 errorElement: <ErrorsPage />
             },
 
-            { path: "*", element: <NotFound /> }
-        ]
+            { path: "*", element: <NotFoundPage /> }
+        ],
+
+        errorElement: <ErrorsPage />
     }
 ]);

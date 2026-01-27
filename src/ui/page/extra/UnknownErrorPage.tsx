@@ -5,7 +5,7 @@ import {
 } from "@patternfly/react-core";
 import BugIcon from '@patternfly/react-icons/dist/esm/icons/bug-icon';
 
-export default function UnknownError() {
+export default function UnknownErrorPage() {
     return (
         <Bullseye>
             <EmptyState titleText="Unknown error!" icon={BugIcon}>

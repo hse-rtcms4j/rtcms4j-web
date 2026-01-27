@@ -6,10 +6,12 @@ import { keycloak } from "@/auth/keycloak"
 
 export class AppRouteError extends Error {
     parsed: ParsedApiError<ErrorResponseDto>;
+    pathname: string | undefined;
 
-    constructor(parsed: ParsedApiError<ErrorResponseDto>) {
+    constructor(parsed: ParsedApiError<ErrorResponseDto>, pathname?: string) {
         super("Parsed error wrapper.");
         this.parsed = parsed;
+        this.pathname = pathname;
     }
 }
 
@@ -21,13 +23,13 @@ export async function commonLoader({ }: LoaderFunctionArgs) {
 }
 
 
-export async function namespacesLayoutLoader({ }: LoaderFunctionArgs) {
+export async function namespacesLayoutLoader({ request }: LoaderFunctionArgs) {
     try {
         await coreApi.hasAccessToAllNamespaces();
         return {};
     } catch (unknownError) {
         const parsedError = await parseApiFetchError(unknownError);
-        throw new AppRouteError(parsedError);
+        throw new AppRouteError(parsedError, new URL(request.url).pathname);
     }
 }
 
