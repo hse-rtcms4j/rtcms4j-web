@@ -25,12 +25,12 @@ import {
     configurationSettingsSubpath,
     configurationVersionsSubpath
 } from "@/router"
-import type { ApplicationDto, ConfigurationDto, NamespaceDto } from "@/api/generated/";
+import type { ApplicationDto, ConfigurationDetailedDto, NamespaceDto } from "@/api/generated/";
 
 
 export default function AppLayout() {
     const [isNavOpen, setIsNavOpen] = useState(true);
-    const { globalAccess, namespaceId, namespace, application, configuration } = useRouteLoaderData("configuration-layout") as { globalAccess: boolean, namespaceId: number, namespace: NamespaceDto | undefined, application: ApplicationDto, configuration: ConfigurationDto };
+    const { globalAccess, namespaceId, namespace, application, configuration } = useRouteLoaderData("configuration-layout") as { globalAccess: boolean, namespaceId: number, namespace: NamespaceDto | undefined, application: ApplicationDto, configuration: ConfigurationDetailedDto };
 
     const masthead = (
         <AppHeaderWithSidebar

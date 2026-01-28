@@ -4,11 +4,11 @@ import {
     CardTitle
 } from "@patternfly/react-core";
 import { useRouteLoaderData } from "react-router-dom";
-import type { ApplicationDto, ConfigurationDto, NamespaceDto } from "@/api/generated";
+import type { ApplicationDto, ConfigurationDetailedDto, NamespaceDto } from "@/api/generated";
 
 
 export default function NamespaceGreetingPage() {
-    const { configuration } = useRouteLoaderData("configuration-layout") as { globalAccess: boolean, namespaceId: number, namespace: NamespaceDto | undefined, application: ApplicationDto, configuration: ConfigurationDto };
+    const { configuration } = useRouteLoaderData("configuration-layout") as { globalAccess: boolean, namespaceId: number, namespace: NamespaceDto | undefined, application: ApplicationDto, configuration: ConfigurationDetailedDto };
 
     return (
         <Card ouiaId="BasicCard">
