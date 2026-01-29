@@ -234,6 +234,7 @@ export default function NamespaceSettingsPage() {
                                                 isChecked={isCreationByService}
                                                 onChange={(_, v) => { setIsCreationByService(v) }}
                                                 ouiaId="BasicSwitch"
+                                                isReversed
                                             />
                                             <ActionGroup>
                                                 <Button variant="primary" onClick={handleUpdateApplication}>Update</Button>

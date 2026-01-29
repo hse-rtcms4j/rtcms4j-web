@@ -109,6 +109,7 @@ export default function NamespaceCreatePage() {
                                 isChecked={isCreationByService}
                                 onChange={(_, v) => {setIsCreationByService(v)}}
                                 ouiaId="BasicSwitch"
+                                isReversed
                             />
                             <ActionGroup>
                                 <Button variant="primary" onClick={handleCreateApplication}>Submit</Button>

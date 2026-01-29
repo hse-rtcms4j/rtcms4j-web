@@ -12,6 +12,7 @@ import { useRouteLoaderData, } from "react-router-dom";
 import { useState } from "react";
 import type { ApplicationDto, ConfigurationDto, NamespaceDto } from "@/api/generated";
 import ConfigurationAppearanceTab from "./ConfigurationAppearanceTab";
+import ConfigurationSchemaTab from "./ConfigurationSchemaTab";
 
 
 export default function NamespaceSettingsPage() {
@@ -38,7 +39,7 @@ export default function NamespaceSettingsPage() {
                         <ConfigurationAppearanceTab />
                     </Tab>
                     <Tab eventKey={1} title={<TabTitleText>Commit schema</TabTitleText>}>
-
+                        <ConfigurationSchemaTab />
                     </Tab>
                     <Tab eventKey={2} title={<TabTitleText>Commit values</TabTitleText>}>
 
