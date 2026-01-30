@@ -26,8 +26,6 @@ import {
     SelectList,
     SelectOption,
     TextInput,
-    CodeBlock,
-    CodeBlockCode,
 } from "@patternfly/react-core";
 import { useRouteLoaderData, useRevalidator, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -37,11 +35,12 @@ import { type ApplicationDto, type ConfigurationDetailedDto, type NamespaceDto, 
 import { useToast } from "@/ui/util/alerts-anchor";
 import { coreApi } from "@/api/client";
 import parseApiFetchError from "@/api/error-handler";
+import { CodeEditor, Language } from "@patternfly/react-code-editor";
 
 
 export default function NamespaceSettingsPage() {
     const navigate = useNavigate();
-    const revalidator = useRevalidator()
+    const revalidator = useRevalidator();
     const { namespaceId, application, configuration } = useRouteLoaderData("configuration-layout") as { globalAccess: boolean, namespaceId: number, namespace: NamespaceDto | undefined, application: ApplicationDto, configuration: ConfigurationDetailedDto };
 
     const { addAlert } = useToast();
@@ -166,7 +165,7 @@ export default function NamespaceSettingsPage() {
                                 <DescriptionListDescription>
                                     {(configuration.jsonSchema?.length ?? 0) != 0 ?
                                         <Button variant="link" isInline icon={<SearchIcon />} onClick={openSchemaModal}>
-                                            {configuration.jsonSchema?.length} bytes
+                                            {configuration.jsonSchema?.length} byte(s)
                                         </Button> :
                                         "not present"}
                                 </DescriptionListDescription>
@@ -181,11 +180,16 @@ export default function NamespaceSettingsPage() {
                 >
                     <ModalHeader title={`${configuration.name} configuration schema`} labelId="variant-modal-title" />
                     <ModalBody id="modal-box-body-variant">
-                        <CodeBlock>
-                            <CodeBlockCode>
-                                {JSON.stringify(configuration.jsonSchema, null, 2)}
-                            </CodeBlockCode>
-                        </CodeBlock>
+                        <CodeEditor
+                            isLanguageLabelVisible
+                            isDarkTheme={true}
+                            isLineNumbersVisible={true}
+                            isReadOnly={true}
+                            isMinimapVisible={false}
+                            code={JSON.stringify(JSON.parse(configuration.jsonSchema ?? ""), null, 2)}
+                            language={Language.json}
+                            height="400px"
+                        />
                     </ModalBody>
                     <ModalFooter>
                         <Button key="cancel" variant="link" onClick={closeSchemaModal}>Close</Button>
@@ -201,7 +205,7 @@ export default function NamespaceSettingsPage() {
                                 <DescriptionListDescription>
                                     {(configuration.jsonValues?.length ?? 0) != 0 ?
                                         <Button variant="link" isInline icon={<SearchIcon />} onClick={openValuesModal}>
-                                            {configuration.jsonValues?.length} bytes
+                                            {configuration.jsonValues?.length} byte(s)
                                         </Button> :
                                         "not present"}
                                 </DescriptionListDescription>
@@ -216,11 +220,16 @@ export default function NamespaceSettingsPage() {
                 >
                     <ModalHeader title={`${configuration.name} configuration values`} labelId="variant-modal-title" />
                     <ModalBody id="modal-box-body-variant">
-                        <CodeBlock>
-                            <CodeBlockCode>
-                                {JSON.stringify(configuration.jsonValues, null, 2)}
-                            </CodeBlockCode>
-                        </CodeBlock>
+                        <CodeEditor
+                            isLanguageLabelVisible
+                            isDarkTheme={true}
+                            isLineNumbersVisible={true}
+                            isReadOnly={true}
+                            isMinimapVisible={false}
+                            code={JSON.stringify(JSON.parse(configuration.jsonValues ?? ""), null, 2)}
+                            language={Language.json}
+                            height="400px"
+                        />
                     </ModalBody>
                     <ModalFooter>
                         <Button key="cancel" variant="link" onClick={closeValuesModal}>Close</Button>
