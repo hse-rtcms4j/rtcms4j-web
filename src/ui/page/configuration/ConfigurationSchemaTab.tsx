@@ -72,16 +72,16 @@ function toJSONSchema(rows: SchemaRow[]): string {
 };
 
 function toJSONValues(jsonSchema: string): string {
-  const parsedSchema = JSON.parse(jsonSchema);
-  const defaultObject: Record<string, any> = {};
+    const parsedSchema = JSON.parse(jsonSchema);
+    const defaultObject: Record<string, any> = {};
 
-  Object.keys(parsedSchema.properties || {}).forEach((key) => {
-    const property = parsedSchema.properties[key];
+    Object.keys(parsedSchema.properties || {}).forEach((key) => {
+        const property = parsedSchema.properties[key];
 
-    defaultObject[key] = property.default || null;
-  });
+        defaultObject[key] = property.default;
+    });
 
-  return JSON.stringify(defaultObject, null, 2);
+    return JSON.stringify(defaultObject, null, 2);
 };
 
 function fromJSONSchema(jsonSchema: string): SchemaRow[] {
@@ -112,15 +112,21 @@ function fromJSONSchema(jsonSchema: string): SchemaRow[] {
     return rows;
 };
 
-export default function NamespaceSettingsPage() {
+
+export default function NamespaceSchemaTab() {
     const { namespaceId, application, configuration } = useRouteLoaderData("configuration-layout") as { globalAccess: boolean, namespaceId: number, namespace: NamespaceDto | undefined, application: ApplicationDto, configuration: ConfigurationDetailedDto };
 
     if (configuration.schemaSourceType == SourceType.Service) {
         return (
-            <Card ouiaId="BasicCard">
-                <CardTitle>{configuration.name} configuration schema modification by user is disabled</CardTitle>
-                <CardBody>Schema Source Type is set to Service. It means that only program applications can commit schema state.</CardBody>
-            </Card>
+            <Flex direction={{ default: 'column' }}>
+                <FlexItem />
+                <FlexItem>
+                    <Card ouiaId="BasicCard">
+                        <CardTitle>{configuration.name} configuration schema modification by user is disabled</CardTitle>
+                        <CardBody>Schema Source Type is set to Service. It means that only program applications can commit schema state.</CardBody>
+                    </Card>
+                </FlexItem>
+            </Flex>
         )
     }
 
@@ -228,7 +234,7 @@ export default function NamespaceSettingsPage() {
                     <CardBody>
                         <Switch
                             id="simple-switch"
-                            label="GUI mode"
+                            label="GUI editor"
                             isChecked={isGuiMode}
                             onChange={(_, v) => switchGuiMode(v)}
                             ouiaId="BasicSwitch"
@@ -246,7 +252,7 @@ export default function NamespaceSettingsPage() {
                                     <Grid hasGutter>
                                         <GridItem span={3}>Key*</GridItem>
                                         <GridItem span={2}>Type*</GridItem>
-                                        <GridItem span={2}>Default Value*</GridItem>
+                                        <GridItem span={2}>Initial Value*</GridItem>
                                         <GridItem span={3}>Description</GridItem>
                                         <GridItem span={1} />
                                     </Grid>

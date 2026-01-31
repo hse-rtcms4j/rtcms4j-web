@@ -37,8 +37,16 @@ import { coreApi } from "@/api/client";
 import parseApiFetchError from "@/api/error-handler";
 import { CodeEditor, Language } from "@patternfly/react-code-editor";
 
+function prettifyJson(jsonString: string | undefined) {
+    if (jsonString == undefined) {
+        return "";
+    } else {
+        return JSON.stringify(JSON.parse(jsonString), null, 2);
+    }
+}
 
-export default function NamespaceSettingsPage() {
+
+export default function NamespaceAppearanceTab() {
     const navigate = useNavigate();
     const revalidator = useRevalidator();
     const { namespaceId, application, configuration } = useRouteLoaderData("configuration-layout") as { globalAccess: boolean, namespaceId: number, namespace: NamespaceDto | undefined, application: ApplicationDto, configuration: ConfigurationDetailedDto };
@@ -186,7 +194,7 @@ export default function NamespaceSettingsPage() {
                             isLineNumbersVisible={true}
                             isReadOnly={true}
                             isMinimapVisible={false}
-                            code={JSON.stringify(JSON.parse(configuration.jsonSchema ?? ""), null, 2)}
+                            code={prettifyJson(configuration.jsonSchema)}
                             language={Language.json}
                             height="400px"
                         />
@@ -226,7 +234,7 @@ export default function NamespaceSettingsPage() {
                             isLineNumbersVisible={true}
                             isReadOnly={true}
                             isMinimapVisible={false}
-                            code={JSON.stringify(JSON.parse(configuration.jsonValues ?? ""), null, 2)}
+                            code={prettifyJson(configuration.jsonValues)}
                             language={Language.json}
                             height="400px"
                         />

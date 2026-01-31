@@ -13,6 +13,7 @@ import { useState } from "react";
 import type { ApplicationDto, ConfigurationDto, NamespaceDto } from "@/api/generated";
 import ConfigurationAppearanceTab from "./ConfigurationAppearanceTab";
 import ConfigurationSchemaTab from "./ConfigurationSchemaTab";
+import ConfigurationValuesTab from "./ConfigurationValuesTab";
 
 
 export default function NamespaceSettingsPage() {
@@ -42,7 +43,7 @@ export default function NamespaceSettingsPage() {
                         <ConfigurationSchemaTab />
                     </Tab>
                     <Tab eventKey={2} title={<TabTitleText>Commit values</TabTitleText>}>
-
+                        <ConfigurationValuesTab />
                     </Tab>
                 </Tabs>
             </FlexItem>
