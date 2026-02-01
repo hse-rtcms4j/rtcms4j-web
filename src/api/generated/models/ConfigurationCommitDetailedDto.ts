@@ -53,6 +53,12 @@ export interface ConfigurationCommitDetailedDto {
     commitId: number;
     /**
      * 
+     * @type {string}
+     * @memberof ConfigurationCommitDetailedDto
+     */
+    commitVersion: string;
+    /**
+     * 
      * @type {SourceType}
      * @memberof ConfigurationCommitDetailedDto
      */
@@ -64,17 +70,17 @@ export interface ConfigurationCommitDetailedDto {
      */
     sourceIdentity: string;
     /**
-     * Configuration json
-     * @type {string}
-     * @memberof ConfigurationCommitDetailedDto
-     */
-    jsonValues?: string;
-    /**
      * Configuration json schema
      * @type {string}
      * @memberof ConfigurationCommitDetailedDto
      */
-    jsonSchema?: string;
+    jsonSchema: string;
+    /**
+     * Configuration json
+     * @type {string}
+     * @memberof ConfigurationCommitDetailedDto
+     */
+    jsonValues: string;
 }
 
 
@@ -87,8 +93,11 @@ export function instanceOfConfigurationCommitDetailedDto(value: object): value i
     if (!('applicationId' in value) || value['applicationId'] === undefined) return false;
     if (!('configurationId' in value) || value['configurationId'] === undefined) return false;
     if (!('commitId' in value) || value['commitId'] === undefined) return false;
+    if (!('commitVersion' in value) || value['commitVersion'] === undefined) return false;
     if (!('sourceType' in value) || value['sourceType'] === undefined) return false;
     if (!('sourceIdentity' in value) || value['sourceIdentity'] === undefined) return false;
+    if (!('jsonSchema' in value) || value['jsonSchema'] === undefined) return false;
+    if (!('jsonValues' in value) || value['jsonValues'] === undefined) return false;
     return true;
 }
 
@@ -106,10 +115,11 @@ export function ConfigurationCommitDetailedDtoFromJSONTyped(json: any, ignoreDis
         'applicationId': json['applicationId'],
         'configurationId': json['configurationId'],
         'commitId': json['commitId'],
+        'commitVersion': json['commitVersion'],
         'sourceType': SourceTypeFromJSON(json['sourceType']),
         'sourceIdentity': json['sourceIdentity'],
-        'jsonValues': json['jsonValues'] == null ? undefined : json['jsonValues'],
-        'jsonSchema': json['jsonSchema'] == null ? undefined : json['jsonSchema'],
+        'jsonSchema': json['jsonSchema'],
+        'jsonValues': json['jsonValues'],
     };
 }
 
@@ -128,10 +138,11 @@ export function ConfigurationCommitDetailedDtoToJSONTyped(value?: ConfigurationC
         'applicationId': value['applicationId'],
         'configurationId': value['configurationId'],
         'commitId': value['commitId'],
+        'commitVersion': value['commitVersion'],
         'sourceType': SourceTypeToJSON(value['sourceType']),
         'sourceIdentity': value['sourceIdentity'],
-        'jsonValues': value['jsonValues'],
         'jsonSchema': value['jsonSchema'],
+        'jsonValues': value['jsonValues'],
     };
 }
 

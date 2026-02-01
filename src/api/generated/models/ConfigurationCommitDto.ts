@@ -53,6 +53,12 @@ export interface ConfigurationCommitDto {
     commitId: number;
     /**
      * 
+     * @type {string}
+     * @memberof ConfigurationCommitDto
+     */
+    commitVersion: string;
+    /**
+     * 
      * @type {SourceType}
      * @memberof ConfigurationCommitDto
      */
@@ -75,6 +81,7 @@ export function instanceOfConfigurationCommitDto(value: object): value is Config
     if (!('applicationId' in value) || value['applicationId'] === undefined) return false;
     if (!('configurationId' in value) || value['configurationId'] === undefined) return false;
     if (!('commitId' in value) || value['commitId'] === undefined) return false;
+    if (!('commitVersion' in value) || value['commitVersion'] === undefined) return false;
     if (!('sourceType' in value) || value['sourceType'] === undefined) return false;
     if (!('sourceIdentity' in value) || value['sourceIdentity'] === undefined) return false;
     return true;
@@ -94,6 +101,7 @@ export function ConfigurationCommitDtoFromJSONTyped(json: any, ignoreDiscriminat
         'applicationId': json['applicationId'],
         'configurationId': json['configurationId'],
         'commitId': json['commitId'],
+        'commitVersion': json['commitVersion'],
         'sourceType': SourceTypeFromJSON(json['sourceType']),
         'sourceIdentity': json['sourceIdentity'],
     };
@@ -114,6 +122,7 @@ export function ConfigurationCommitDtoToJSONTyped(value?: ConfigurationCommitDto
         'applicationId': value['applicationId'],
         'configurationId': value['configurationId'],
         'commitId': value['commitId'],
+        'commitVersion': value['commitVersion'],
         'sourceType': SourceTypeToJSON(value['sourceType']),
         'sourceIdentity': value['sourceIdentity'],
     };

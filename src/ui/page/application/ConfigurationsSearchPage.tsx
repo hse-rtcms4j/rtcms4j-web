@@ -57,7 +57,6 @@ export default function NamespacesSearchPage() {
     const navigate = useNavigate();
     const { namespaceId, application } = useRouteLoaderData("application-layout") as { globalAccess: boolean, namespaceId: number, namespace: NamespaceDto | undefined, application: ApplicationDto };
 
-
     const [inputValue, setInputValue] = useState("");
     const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined);
 

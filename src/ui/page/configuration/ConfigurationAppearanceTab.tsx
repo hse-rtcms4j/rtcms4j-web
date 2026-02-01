@@ -38,7 +38,7 @@ import parseApiFetchError from "@/api/error-handler";
 import { CodeEditor, Language } from "@patternfly/react-code-editor";
 
 function prettifyJson(jsonString: string | undefined) {
-    if (jsonString == undefined) {
+    if (jsonString == undefined || jsonString.length == 0) {
         return "";
     } else {
         return JSON.stringify(JSON.parse(jsonString), null, 2);
@@ -46,7 +46,7 @@ function prettifyJson(jsonString: string | undefined) {
 }
 
 
-export default function NamespaceAppearanceTab() {
+export default function ConfigurationVersionsPage() {
     const navigate = useNavigate();
     const revalidator = useRevalidator();
     const { namespaceId, application, configuration } = useRouteLoaderData("configuration-layout") as { globalAccess: boolean, namespaceId: number, namespace: NamespaceDto | undefined, application: ApplicationDto, configuration: ConfigurationDetailedDto };
@@ -189,6 +189,7 @@ export default function NamespaceAppearanceTab() {
                     <ModalHeader title={`${configuration.name} configuration schema`} labelId="variant-modal-title" />
                     <ModalBody id="modal-box-body-variant">
                         <CodeEditor
+                            headerMainContent="Json schema"
                             isLanguageLabelVisible
                             isDarkTheme={true}
                             isLineNumbersVisible={true}
@@ -229,6 +230,7 @@ export default function NamespaceAppearanceTab() {
                     <ModalHeader title={`${configuration.name} configuration values`} labelId="variant-modal-title" />
                     <ModalBody id="modal-box-body-variant">
                         <CodeEditor
+                            headerMainContent="Json values"
                             isLanguageLabelVisible
                             isDarkTheme={true}
                             isLineNumbersVisible={true}

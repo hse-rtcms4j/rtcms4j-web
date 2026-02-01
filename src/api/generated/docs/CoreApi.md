@@ -1708,7 +1708,7 @@ example().catch(console.error);
 
 ## getConfigurationCommits
 
-> Array&lt;ConfigurationCommitDto&gt; getConfigurationCommits(nid, aid, cid)
+> PagedModelConfigurationCommitDto getConfigurationCommits(nid, aid, cid, pageable)
 
 Get namespace application configuration commits
 
@@ -1736,6 +1736,8 @@ async function example() {
     aid: 789,
     // number | Configuration id
     cid: 789,
+    // Pageable (optional)
+    pageable: ...,
   } satisfies GetConfigurationCommitsRequest;
 
   try {
@@ -1758,10 +1760,11 @@ example().catch(console.error);
 | **nid** | `number` | Namespace id | [Defaults to `undefined`] |
 | **aid** | `number` | Application id | [Defaults to `undefined`] |
 | **cid** | `number` | Configuration id | [Defaults to `undefined`] |
+| **pageable** | [](.md) |  | [Optional] [Defaults to `undefined`] |
 
 ### Return type
 
-[**Array&lt;ConfigurationCommitDto&gt;**](ConfigurationCommitDto.md)
+[**PagedModelConfigurationCommitDto**](PagedModelConfigurationCommitDto.md)
 
 ### Authorization
 

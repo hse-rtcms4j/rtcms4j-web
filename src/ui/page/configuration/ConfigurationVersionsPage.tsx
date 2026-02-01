@@ -6,8 +6,11 @@ import {
     Divider,
     Flex,
     FlexItem,
-    TextInputGroup,
-    TextInputGroupMain,
+    Modal,
+    ModalBody,
+    ModalFooter,
+    ModalHeader,
+    Pagination,
 } from "@patternfly/react-core";
 import {
     Table,
@@ -18,19 +21,37 @@ import {
     Td,
     TableText,
 } from "@patternfly/react-table";
-import { useRouteLoaderData } from "react-router-dom";
+import { useRevalidator, useRouteLoaderData } from "react-router-dom";
 import { useState, useEffect } from "react";
-import type { KeycloakProfile } from "keycloak-js";
-import type { ApplicationDto, NamespaceDto, UserRoleDto } from "@/api/generated";
+import RedoIcon from '@patternfly/react-icons/dist/esm/icons/redo-icon';
+import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
+import TimesIcon from '@patternfly/react-icons/dist/esm/icons/times-icon';
+import type { ApplicationDto, ConfigurationDetailedDto, NamespaceDto, PagedModelConfigurationCommitDto } from "@/api/generated";
 import { useToast } from "@/ui/util/alerts-anchor";
 import { coreApi } from "@/api/client";
 import parseApiFetchError from "@/api/error-handler";
+import { CodeEditor, Language } from "@patternfly/react-code-editor";
 
-function useManagers(nid: number, aid: number, refreshKey: number) {
+type SelectedCommit = {
+    id: number;
+    version: string;
+    jsonSchema: string;
+    jsonValues: string;
+};
+
+function prettifyJson(jsonString: string | undefined) {
+    if (jsonString == undefined || jsonString.length == 0) {
+        return "";
+    } else {
+        return JSON.stringify(JSON.parse(jsonString), null, 2);
+    }
+}
+
+function useConfigurationCommits(namespaceId: number, applicationId: number, configurationId: number, pageNumber: number, pageSize: number, refreshKey: number) {
     const [state, setState] = useState<{
-        managers: UserRoleDto[] | undefined;
+        pagedModel: PagedModelConfigurationCommitDto | undefined;
         loading: boolean;
-    }>({ managers: undefined, loading: true });
+    }>({ pagedModel: undefined, loading: true });
 
     useEffect(() => {
         let cancelled = false;
@@ -39,8 +60,13 @@ function useManagers(nid: number, aid: number, refreshKey: number) {
 
         (async () => {
             try {
-                const managers = await coreApi.getApplicationManagers({ nid, aid });
-                if (!cancelled) setState({ managers, loading: false });
+                const configurations = await coreApi.getConfigurationCommits({
+                    nid: namespaceId,
+                    aid: applicationId,
+                    cid: configurationId,
+                    pageable: { page: pageNumber, size: pageSize },
+                });
+                if (!cancelled) setState({ pagedModel: configurations, loading: false });
             } catch {
                 if (!cancelled) setState(s => ({ ...s, loading: false }));
             }
@@ -49,38 +75,57 @@ function useManagers(nid: number, aid: number, refreshKey: number) {
         return () => {
             cancelled = true;
         };
-    }, [nid, refreshKey]);
+    }, [namespaceId, applicationId, pageNumber, pageSize, refreshKey]);
 
     return state;
 }
 
-const uuidRegex =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-const isValidUuid = (value: string) => uuidRegex.test(value);
-
 
 export default function NamespaceAdminsPage() {
-    const { profile } = useRouteLoaderData("common") as { profile: KeycloakProfile };
-    const { namespaceId, application } = useRouteLoaderData("application-layout") as { globalAccess: boolean, namespaceId: number, namespace: NamespaceDto | undefined, application: ApplicationDto };
-
+    const revalidator = useRevalidator();
     const { addAlert } = useToast();
+    const { namespaceId, application, configuration } = useRouteLoaderData("configuration-layout") as { globalAccess: boolean, namespaceId: number, namespace: NamespaceDto | undefined, application: ApplicationDto, configuration: ConfigurationDetailedDto };
 
-    const [sub, setSub] = useState("");
-    const isValid = sub === "" || isValidUuid(sub);
+    const [page, setPage] = useState(1);
+    const [perPage, setPerPage] = useState(10);
 
     const [refreshKey, setRefreshKey] = useState(0);
-    const managersWrapper = useManagers(namespaceId, application.id, refreshKey);
+    const commitsWrapper = useConfigurationCommits(namespaceId, application.id, configuration.id, page - 1, perPage, refreshKey);
 
-    const handleManagerGrant = async () => {
-        const requestSub = sub.trim()
+    const [selectedCommit, setSelectedCommit] = useState<SelectedCommit>({
+        id: -1,
+        version: "unknown",
+        jsonSchema: "",
+        jsonValues: "",
+    });
+
+    const [isRollbackModalVisible, setRollbackModalVisible] = useState(false);
+    const openRollbackModal = () => setRollbackModalVisible(true);
+    const closeRollbackModal = () => setRollbackModalVisible(false);
+
+    const [isShowModalVisible, setShowModalVisible] = useState(false);
+    const openShowModal = () => setShowModalVisible(true);
+    const closeShowModal = () => setShowModalVisible(false);
+
+    const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+    const openDeleteModal = () => setDeleteModalVisible(true);
+    const closeDeleteModal = () => setDeleteModalVisible(false);
+
+    const selectCommit = async (commitId: number) => {
+        if (selectedCommit != undefined && selectedCommit.id == commitId) {
+            return true;
+        }
 
         try {
-            await coreApi.addApplicationManager({ nid: namespaceId, aid: application.id, uid: requestSub });
+            const response = await coreApi.getConfigurationCommit({ nid: namespaceId, aid: application.id, cid: configuration.id, ctid: commitId });
+            setSelectedCommit({
+                id: response.commitId,
+                version: response.commitVersion,
+                jsonSchema: response.jsonSchema,
+                jsonValues: response.jsonValues,
+            });
 
-            addAlert("Granted!", "success", `Application ${application.name} manager: ${requestSub}.`, 2_000);
-            setRefreshKey(k => k + 1);
-            setSub("");
+            return true;
         } catch (unknownError) {
             const parsedError = await parseApiFetchError(unknownError)
 
@@ -89,8 +134,54 @@ export default function NamespaceAdminsPage() {
 
                 if (parsedError.dto?.detailMessage !== undefined) {
                     errorMessage = parsedError.dto?.detailMessage
-                } else if (parsedError.status === 409) {
-                    errorMessage = "Manager already assigned."
+                } else if (parsedError.status === 400) {
+                    errorMessage = "Wrong request!"
+                } else {
+                    errorMessage = "Unexpected response. See logs for details..."
+                }
+
+                addAlert("Http error!", "danger", errorMessage, 3_000);
+            } else {
+                console.log(parsedError);
+                addAlert("Unknown error!", "danger", "See logs for details...");
+            }
+
+            return false;
+        }
+    };
+
+    const openRollbackModalByCommitId = async (commitId: number) => {
+        if (await selectCommit(commitId)) {
+            openRollbackModal();
+        }
+    };
+
+    const openShowModalByCommitId = async (commitId: number) => {
+        if (await selectCommit(commitId)) {
+            openShowModal();
+        }
+    };
+
+    const openDeleteModalByCommitId = async (commitId: number) => {
+        if (await selectCommit(commitId)) {
+            openDeleteModal();
+        }
+    };
+
+    const rollbackCommit = async (commitId: number) => {
+        try {
+            await coreApi.applyConfigurationCommit({ nid: namespaceId, aid: application.id, cid: configuration.id, ctid: commitId });
+
+            addAlert("Success!", "success", `Switched to commit ${commitId}.`, 2_000);
+            revalidator.revalidate();
+        } catch (unknownError) {
+            const parsedError = await parseApiFetchError(unknownError)
+
+            if (parsedError.kind == "http") {
+                let errorMessage: string
+
+                if (parsedError.dto?.detailMessage !== undefined) {
+                    errorMessage = parsedError.dto?.detailMessage
                 } else if (parsedError.status === 400) {
                     errorMessage = "Wrong request!"
                 } else {
@@ -105,15 +196,13 @@ export default function NamespaceAdminsPage() {
         }
     };
 
-    const handleManagerRevoke = async (sub: string) => {
-        const requestSub = sub.trim()
-
+    const deleteCommit = async (commitId: number) => {
         try {
-            await coreApi.removeApplicationManager({ nid: namespaceId, aid: application.id, uid: requestSub });
+            await coreApi.deleteConfigurationCommit({ nid: namespaceId, aid: application.id, cid: configuration.id, ctid: commitId });
 
-            addAlert("Revoked!", "success", `Application ${application.name} manager: ${requestSub}.`, 2_000);
-            setRefreshKey(k => k + 1);
-            setSub("");
+            addAlert("Success!", "success", `Deleted commit ${commitId}.`, 2_000);
+            setRefreshKey(v => v + 1);
+            revalidator.revalidate();
         } catch (unknownError) {
             const parsedError = await parseApiFetchError(unknownError)
 
@@ -122,8 +211,6 @@ export default function NamespaceAdminsPage() {
 
                 if (parsedError.dto?.detailMessage !== undefined) {
                     errorMessage = parsedError.dto?.detailMessage
-                } else if (parsedError.status === 404) {
-                    errorMessage = "Manager not found."
                 } else if (parsedError.status === 400) {
                     errorMessage = "Wrong request!"
                 } else {
@@ -142,25 +229,20 @@ export default function NamespaceAdminsPage() {
         <Flex direction={{ default: 'column' }}>
             <FlexItem>
                 <Card ouiaId="BasicCard">
-                    <CardTitle>Application {application.name} managers</CardTitle>
-                    <CardBody>An application manager is a user, that allowed to modify application information and fully manage its configurations.</CardBody>
+                    <CardTitle>Configuration {configuration.name} versions</CardTitle>
+                    <CardBody>A configuration version is a fixed state of key-value properties.</CardBody>
                 </Card>
             </FlexItem>
             <FlexItem>
-                <Flex direction={{ default: 'row' }}>
-                    <FlexItem>
-                        <TextInputGroup validated={isValid ? undefined : 'error'}>
-                            <TextInputGroupMain
-                                placeholder="User subject"
-                                value={sub}
-                                onChange={(_event, value) => setSub(value)}
-                            />
-                        </TextInputGroup>
-                    </FlexItem>
-                    <FlexItem>
-                        <Button variant="primary" onClick={handleManagerGrant} isDisabled={sub.length == 0 || !isValid} >Assign manager</Button>
-                    </FlexItem>
-                </Flex>
+                <Pagination
+                    widgetId="pagination-top"
+                    ouiaId="PaginationTop"
+                    itemCount={commitsWrapper?.pagedModel?.page?.totalElements ?? 0}
+                    perPage={perPage}
+                    page={page}
+                    onSetPage={(_e, value) => setPage(value)}
+                    onPerPageSelect={(_e, value) => setPerPage(value)}
+                />
             </FlexItem>
             <FlexItem>
                 <Divider />
@@ -169,27 +251,48 @@ export default function NamespaceAdminsPage() {
                 <Table aria-label="Table">
                     <Thead>
                         <Tr>
-                            <Th>Subject name</Th>
-                            <Th>Subject id</Th>
-                            <Th>Assigner id</Th>
-                            <Th screenReaderText="Secondary action" />
+                            <Th>Commit id</Th>
+                            <Th>Version</Th>
+                            <Th>Kind</Th>
+                            <Th screenReaderText="Rollback action" />
+                            <Th screenReaderText="Manage action" />
+                            <Th screenReaderText="Delete action" />
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {managersWrapper?.loading ? (
+                        {commitsWrapper?.loading ? (
                             ""
-                        ) : managersWrapper?.managers?.length === 0 ? (
+                        ) : commitsWrapper?.pagedModel?.content?.length === 0 ? (
                             ""
                         ) : (
-                            managersWrapper?.managers?.map(manager => (
-                                <Tr key={manager.subject}>
-                                    <Td dataLabel="Subject name">{manager.username ?? "unknown"}</Td>
-                                    <Td dataLabel="Subject id">{manager.subject}{profile.id == manager.subject ? " (you)" : ""}</Td>
-                                    <Td dataLabel="Assigner id">{manager.assignerSubject}{profile.id == manager.assignerSubject ? " (you)" : ""}</Td>
+                            commitsWrapper?.pagedModel?.content?.map(commit => (
+                                <Tr key={commit.commitId}>
+                                    <Td dataLabel="Commit id">{commit.commitId}</Td>
+                                    <Td dataLabel="Commit version">{commit.commitVersion}{configuration.commitVersion == commit.commitVersion ? " (current)" : ""}</Td>
+                                    <Td dataLabel="Commit version">New commit</Td>
                                     <Td modifier="fitContent" hasAction>
-                                        {profile.id != manager.subject ?
+                                        {configuration.commitVersion != commit.commitVersion ?
                                             <TableText>
-                                                <Button variant="secondary" onClick={() => handleManagerRevoke(manager.subject)}>Revoke</Button>
+                                                <Button variant="primary" icon={<RedoIcon />} onClick={() => openRollbackModalByCommitId(commit.commitId)}>
+                                                    Rollback
+                                                </Button>
+                                            </TableText>
+                                            : ""
+                                        }
+                                    </Td>
+                                    <Td modifier="fitContent" hasAction>
+                                        {<TableText>
+                                            <Button variant="link" icon={<SearchIcon />} onClick={() => openShowModalByCommitId(commit.commitId)}>
+                                                Show details
+                                            </Button>
+                                        </TableText>}
+                                    </Td>
+                                    <Td modifier="fitContent" hasAction>
+                                        {configuration.commitVersion != commit.commitVersion ?
+                                            <TableText>
+                                                <Button variant="danger" icon={<TimesIcon />} onClick={() => openDeleteModalByCommitId(commit.commitId)}>
+                                                    Delete
+                                                </Button>
                                             </TableText>
                                             : ""
                                         }
@@ -201,6 +304,80 @@ export default function NamespaceAdminsPage() {
                         }
                     </Tbody>
                 </Table>
+                <Modal
+                    variant="small"
+                    isOpen={isRollbackModalVisible}
+                    onClose={closeRollbackModal}
+                >
+                    <ModalHeader title={`Rollback ${configuration.name} version ${selectedCommit.version}?`} labelId="variant-modal-title" />
+                    <ModalBody id="modal-box-body-variant">
+                        Current version {configuration.commitVersion} will be replaced with {selectedCommit.version}.
+                        <br />
+                        Version {configuration.commitVersion} will not be deleted.
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button variant="primary" onClick={() => { rollbackCommit(selectedCommit.id); closeRollbackModal(); }}>
+                            Rollback {selectedCommit.version} version
+                        </Button>
+                        <Button key="cancel" variant="link" onClick={closeRollbackModal}>
+                            Cancel
+                        </Button>
+                    </ModalFooter>
+                </Modal>
+                <Modal
+                    variant="small"
+                    isOpen={isShowModalVisible}
+                    onClose={closeShowModal}
+                >
+                    <ModalHeader title={`Configuration ${configuration.name} version ${selectedCommit.version}`} labelId="variant-modal-title" />
+                    <ModalBody id="modal-box-body-variant">
+                        <CodeEditor
+                            headerMainContent="Json schema"
+                            isLanguageLabelVisible
+                            isDarkTheme={true}
+                            isLineNumbersVisible={true}
+                            isReadOnly={true}
+                            isMinimapVisible={false}
+                            code={prettifyJson(selectedCommit.jsonSchema)}
+                            language={Language.json}
+                            height="400px"
+                        />
+                        <CodeEditor
+                            headerMainContent="Json values"
+                            isLanguageLabelVisible
+                            isDarkTheme={true}
+                            isLineNumbersVisible={true}
+                            isReadOnly={true}
+                            isMinimapVisible={false}
+                            code={prettifyJson(selectedCommit.jsonValues)}
+                            language={Language.json}
+                            height="400px"
+                        />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button key="cancel" variant="link" onClick={closeShowModal}>
+                            Close
+                        </Button>
+                    </ModalFooter>
+                </Modal>
+                <Modal
+                    variant="small"
+                    isOpen={isDeleteModalVisible}
+                    onClose={closeDeleteModal}
+                >
+                    <ModalHeader title={`Delete ${configuration.name} version ${selectedCommit.version}?`} labelId="variant-modal-title" />
+                    <ModalBody id="modal-box-body-variant">
+                        Configuration version {selectedCommit.version} will be permanently deleted.
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button variant="danger" onClick={() => { deleteCommit(selectedCommit.id); closeDeleteModal(); }}>
+                            Delete {selectedCommit.version} version!
+                        </Button>
+                        <Button key="cancel" variant="link" onClick={closeDeleteModal}>
+                            Cancel
+                        </Button>
+                    </ModalFooter>
+                </Modal>
             </FlexItem>
         </Flex>
     )

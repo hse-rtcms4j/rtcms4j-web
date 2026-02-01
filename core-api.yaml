@@ -1086,15 +1086,18 @@ paths:
           schema:
             type: integer
             format: int64
+        - name: pageable
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Pageable'
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ConfigurationCommitDto'
+                $ref: '#/components/schemas/PagedModelConfigurationCommitDto'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1755,6 +1758,16 @@ components:
       description: Configuration json schema
       type: string
 
+    PagedModelConfigurationCommitDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigurationCommitDto'
+        page:
+          $ref: '#/components/schemas/PageMetadata'
+
     ConfigurationCommitDto:
       type: object
       required:
@@ -1762,6 +1775,7 @@ components:
         - applicationId
         - configurationId
         - commitId
+        - commitVersion
         - sourceType
         - sourceIdentity
       properties:
@@ -1777,6 +1791,8 @@ components:
         commitId:
           type: integer
           format: int64
+        commitVersion:
+          type: string
         sourceType:
           $ref: '#/components/schemas/SourceType'
         sourceIdentity:
@@ -1786,8 +1802,11 @@ components:
       allOf:
         - $ref: '#/components/schemas/ConfigurationCommitDto'
         - type: object
+          required:
+            - jsonSchema
+            - jsonValues
           properties:
-            jsonValues:
-              $ref: '#/components/schemas/ConfigurationJsonValues'
             jsonSchema:
               $ref: '#/components/schemas/ConfigurationJsonSchema'
+            jsonValues:
+              $ref: '#/components/schemas/ConfigurationJsonValues'

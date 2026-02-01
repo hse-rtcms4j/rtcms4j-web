@@ -19,6 +19,7 @@ docs/NamespaceUpdateRequest.md
 docs/PageMetadata.md
 docs/Pageable.md
 docs/PagedModelApplicationDto.md
+docs/PagedModelConfigurationCommitDto.md
 docs/PagedModelConfigurationDto.md
 docs/PagedModelNamespaceDto.md
 docs/SourceType.md
@@ -42,6 +43,7 @@ models/NamespaceUpdateRequest.ts
 models/PageMetadata.ts
 models/Pageable.ts
 models/PagedModelApplicationDto.ts
+models/PagedModelConfigurationCommitDto.ts
 models/PagedModelConfigurationDto.ts
 models/PagedModelNamespaceDto.ts
 models/SourceType.ts

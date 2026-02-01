@@ -19,7 +19,6 @@ import type {
   ApplicationDto,
   ApplicationUpdateRequest,
   ConfigurationCommitDetailedDto,
-  ConfigurationCommitDto,
   ConfigurationCommitRequest,
   ConfigurationDetailedDto,
   ConfigurationDto,
@@ -32,6 +31,7 @@ import type {
   NamespaceUpdateRequest,
   Pageable,
   PagedModelApplicationDto,
+  PagedModelConfigurationCommitDto,
   PagedModelConfigurationDto,
   PagedModelNamespaceDto,
   UserRoleDto,
@@ -45,8 +45,6 @@ import {
     ApplicationUpdateRequestToJSON,
     ConfigurationCommitDetailedDtoFromJSON,
     ConfigurationCommitDetailedDtoToJSON,
-    ConfigurationCommitDtoFromJSON,
-    ConfigurationCommitDtoToJSON,
     ConfigurationCommitRequestFromJSON,
     ConfigurationCommitRequestToJSON,
     ConfigurationDetailedDtoFromJSON,
@@ -71,6 +69,8 @@ import {
     PageableToJSON,
     PagedModelApplicationDtoFromJSON,
     PagedModelApplicationDtoToJSON,
+    PagedModelConfigurationCommitDtoFromJSON,
+    PagedModelConfigurationCommitDtoToJSON,
     PagedModelConfigurationDtoFromJSON,
     PagedModelConfigurationDtoToJSON,
     PagedModelNamespaceDtoFromJSON,
@@ -201,6 +201,7 @@ export interface GetConfigurationCommitsRequest {
     nid: number;
     aid: number;
     cid: number;
+    pageable?: Pageable;
 }
 
 export interface GetNamespaceRequest {
@@ -1441,7 +1442,7 @@ export class CoreApi extends runtime.BaseAPI {
     /**
      * Get namespace application configuration commits
      */
-    async getConfigurationCommitsRaw(requestParameters: GetConfigurationCommitsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<ConfigurationCommitDto>>> {
+    async getConfigurationCommitsRaw(requestParameters: GetConfigurationCommitsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PagedModelConfigurationCommitDto>> {
         if (requestParameters['nid'] == null) {
             throw new runtime.RequiredError(
                 'nid',
@@ -1464,6 +1465,10 @@ export class CoreApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['pageable'] != null) {
+            queryParameters['pageable'] = requestParameters['pageable'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -1488,13 +1493,13 @@ export class CoreApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(ConfigurationCommitDtoFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PagedModelConfigurationCommitDtoFromJSON(jsonValue));
     }
 
     /**
      * Get namespace application configuration commits
      */
-    async getConfigurationCommits(requestParameters: GetConfigurationCommitsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<ConfigurationCommitDto>> {
+    async getConfigurationCommits(requestParameters: GetConfigurationCommitsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PagedModelConfigurationCommitDto> {
         const response = await this.getConfigurationCommitsRaw(requestParameters, initOverrides);
         return await response.value();
     }

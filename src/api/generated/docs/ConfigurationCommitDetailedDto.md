@@ -10,10 +10,11 @@ Name | Type
 `applicationId` | number
 `configurationId` | number
 `commitId` | number
+`commitVersion` | string
 `sourceType` | [SourceType](SourceType.md)
 `sourceIdentity` | string
-`jsonValues` | string
 `jsonSchema` | string
+`jsonValues` | string
 
 ## Example
 
@@ -26,10 +27,11 @@ const example = {
   "applicationId": null,
   "configurationId": null,
   "commitId": null,
+  "commitVersion": null,
   "sourceType": null,
   "sourceIdentity": null,
-  "jsonValues": null,
   "jsonSchema": null,
+  "jsonValues": null,
 } satisfies ConfigurationCommitDetailedDto
 
 console.log(example)
