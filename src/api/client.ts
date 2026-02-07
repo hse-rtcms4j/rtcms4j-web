@@ -9,6 +9,7 @@ await keycloak.init({
 
 const config = new Configuration({
     basePath: import.meta.env.VITE_API_BASE_URL,
+
     fetchApi: createKeycloakFetch(keycloak),
 })
 
