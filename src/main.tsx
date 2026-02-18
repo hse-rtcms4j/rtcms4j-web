@@ -6,7 +6,6 @@ import "@patternfly/react-core/dist/styles/base.css"
 import "@/styles/theme.css"
 import { AlertsAnchor } from '@/ui/util/alerts-anchor';
 
-
 let root = document.getElementById('root')!
 createRoot(root)
     .render(
