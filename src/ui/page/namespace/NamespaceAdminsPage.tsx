@@ -21,7 +21,7 @@ import {
 import { useRouteLoaderData } from "react-router-dom";
 import { useState, useEffect } from "react";
 import type { KeycloakProfile } from "keycloak-js";
-import type { NamespaceDto, UserRoleDto } from "@/api/generated";
+import type { NamespaceDto, UserRoleDto } from "@/api/generated/core";
 import { useToast } from "@/ui/util/alerts-anchor";
 import { coreApi } from "@/api/client";
 import parseApiFetchError from "@/api/error-handler";

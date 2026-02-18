@@ -31,7 +31,7 @@ import { useRouteLoaderData, useRevalidator, useNavigate } from "react-router-do
 import { useState } from "react";
 import { buildApplicationPath } from "@/router";
 import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
-import { type ApplicationDto, type ConfigurationDetailedDto, type NamespaceDto, SourceType } from "@/api/generated";
+import { type ApplicationDto, type ConfigurationDetailedDto, type NamespaceDto, SourceType } from "@/api/generated/core";
 import { useToast } from "@/ui/util/alerts-anchor";
 import { coreApi } from "@/api/client";
 import parseApiFetchError from "@/api/error-handler";

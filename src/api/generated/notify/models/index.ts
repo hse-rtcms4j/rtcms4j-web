@@ -7,5 +7,6 @@ export * from './ConfigurationFeedbackDto';
 export * from './ConfigurationFeedbackRequestDto';
 export * from './ConfigurationFeedbackResponseDto';
 export * from './ConfigurationUpdateEventDto';
+export * from './ErrorResponse';
 export * from './NotificationEventDto';
 export * from './PasswordRotationEventDto';

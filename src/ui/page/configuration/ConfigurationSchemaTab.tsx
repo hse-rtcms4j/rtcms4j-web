@@ -17,7 +17,7 @@ import { useRouteLoaderData, useRevalidator } from "react-router-dom";
 import { useState } from "react";
 import TimesIcon from '@patternfly/react-icons/dist/esm/icons/times-icon';
 import PlusIcon from '@patternfly/react-icons/dist/esm/icons/plus-icon';
-import { type ApplicationDto, type ConfigurationDetailedDto, type NamespaceDto, SourceType } from "@/api/generated";
+import { type ApplicationDto, type ConfigurationDetailedDto, type NamespaceDto, SourceType } from "@/api/generated/core";
 import { useToast } from "@/ui/util/alerts-anchor";
 import { coreApi } from "@/api/client";
 import parseApiFetchError from "@/api/error-handler";

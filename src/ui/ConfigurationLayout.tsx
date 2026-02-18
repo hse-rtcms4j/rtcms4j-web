@@ -25,7 +25,7 @@ import {
     configurationSettingsSubpath,
     configurationVersionsSubpath
 } from "@/router"
-import type { ApplicationDto, ConfigurationDetailedDto, NamespaceDto } from "@/api/generated/";
+import type { ApplicationDto, ConfigurationDetailedDto, NamespaceDto } from "@/api/generated/core";
 
 
 export default function AppLayout() {

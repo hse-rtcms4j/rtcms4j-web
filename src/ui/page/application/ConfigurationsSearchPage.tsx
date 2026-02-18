@@ -15,7 +15,7 @@ import { useState, useEffect } from "react";
 import CubesIcon from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
 import { useNavigate, useRouteLoaderData } from "react-router-dom";
 import { coreApi } from "@/api/client";
-import type { ApplicationDto, NamespaceDto, PagedModelConfigurationDto } from "@/api/generated";
+import type { ApplicationDto, NamespaceDto, PagedModelConfigurationDto } from "@/api/generated/core";
 import configurationSvg from "/configuration.svg"
 import { buildConfigurationPath } from "@/router";
 

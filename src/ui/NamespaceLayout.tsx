@@ -24,7 +24,7 @@ import {
     applicationCreateSubpath,
     applicationsSearchSubpath
 } from "@/router"
-import type { NamespaceDto } from "@/api/generated/models";
+import type { NamespaceDto } from "@/api/generated/core";
 
 
 export default function AppLayout() {

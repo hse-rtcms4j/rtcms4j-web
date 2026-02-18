@@ -10,7 +10,7 @@ import {
 } from "@patternfly/react-core";
 import { useRouteLoaderData, } from "react-router-dom";
 import { useState } from "react";
-import type { ApplicationDto, ConfigurationDto, NamespaceDto } from "@/api/generated";
+import type { ApplicationDto, ConfigurationDto, NamespaceDto } from "@/api/generated/core";
 import ConfigurationAppearanceTab from "./ConfigurationAppearanceTab";
 import ConfigurationSchemaTab from "./ConfigurationSchemaTab";
 import ConfigurationValuesTab from "./ConfigurationValuesTab";

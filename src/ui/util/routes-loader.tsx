@@ -1,7 +1,7 @@
 import { type LoaderFunctionArgs } from "react-router-dom";
 import parseApiFetchError, { type ParsedApiError } from "@/api/error-handler";
 import { coreApi } from "@/api/client";
-import type { ErrorResponseDto, NamespaceDto } from "@/api/generated";
+import type { ErrorResponseDto, NamespaceDto } from "@/api/generated/core";
 import { keycloak } from "@/auth/keycloak"
 
 export class AppRouteError extends Error {

@@ -23,7 +23,7 @@ import { useNavigate, useRouteLoaderData } from "react-router-dom";
 import { coreApi } from "@/api/client";
 import parseApiFetchError from "@/api/error-handler";
 import { useToast } from "@/ui/util/alerts-anchor";
-import { type ApplicationDto, type NamespaceDto, SourceType } from "@/api/generated";
+import { type ApplicationDto, type NamespaceDto, SourceType } from "@/api/generated/core";
 import { buildConfigurationPath } from "@/router";
 
 

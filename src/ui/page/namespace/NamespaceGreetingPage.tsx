@@ -4,7 +4,7 @@ import {
     CardTitle
 } from "@patternfly/react-core";
 import { useRouteLoaderData } from "react-router-dom";
-import type { NamespaceDto } from "@/api/generated";
+import type { NamespaceDto } from "@/api/generated/core";
 
 
 export default function NamespaceGreetingPage() {

@@ -21,7 +21,7 @@ import {
 } from "@patternfly/react-core";
 import { useRouteLoaderData, useRevalidator, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import type { NamespaceDto } from "@/api/generated";
+import type { NamespaceDto } from "@/api/generated/core";
 import { useToast } from "@/ui/util/alerts-anchor";
 import { coreApi } from "@/api/client";
 import parseApiFetchError from "@/api/error-handler";

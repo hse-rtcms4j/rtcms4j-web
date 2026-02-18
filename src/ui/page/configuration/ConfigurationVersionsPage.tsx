@@ -26,7 +26,7 @@ import { useState, useEffect } from "react";
 import RedoIcon from '@patternfly/react-icons/dist/esm/icons/redo-icon';
 import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
 import TimesIcon from '@patternfly/react-icons/dist/esm/icons/times-icon';
-import type { ApplicationDto, ConfigurationDetailedDto, NamespaceDto, PagedModelConfigurationCommitDto } from "@/api/generated";
+import type { ApplicationDto, ConfigurationDetailedDto, NamespaceDto, PagedModelConfigurationCommitDto } from "@/api/generated/core";
 import { useToast } from "@/ui/util/alerts-anchor";
 import { coreApi } from "@/api/client";
 import parseApiFetchError from "@/api/error-handler";

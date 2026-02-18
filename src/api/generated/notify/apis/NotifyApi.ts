@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* tslint:disable */
 /* eslint-disable */
 /**
@@ -13,17 +14,15 @@
  */
 
 
-import * as runtime from '../../runtime';
+import * as runtime from '../runtime';
 import type {
   ApplicationFeedbackRequestDto,
   ApplicationFeedbackResponseDto,
   ConfigurationFeedbackRequestDto,
   ConfigurationFeedbackResponseDto,
+  ErrorResponse,
   NotificationEventDto,
 } from '../models/index';
-import type {
-    ErrorResponseDto,
-} from '../../common/models';
 import {
     ApplicationFeedbackRequestDtoFromJSON,
     ApplicationFeedbackRequestDtoToJSON,
@@ -33,13 +32,11 @@ import {
     ConfigurationFeedbackRequestDtoToJSON,
     ConfigurationFeedbackResponseDtoFromJSON,
     ConfigurationFeedbackResponseDtoToJSON,
+    ErrorResponseFromJSON,
+    ErrorResponseToJSON,
     NotificationEventDtoFromJSON,
     NotificationEventDtoToJSON,
 } from '../models/index';
-import type {
-    ErrorResponseDtoFromJSON,
-    ErrorResponseDtoToJSON,
-} from '../../common/models';
 
 export interface GetApplicationFeedbackRequest {
     nid: number;
