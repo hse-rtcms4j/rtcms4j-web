@@ -39,19 +39,21 @@ export interface PagedModelNamespaceDto {
      * @type {Array<NamespaceDto>}
      * @memberof PagedModelNamespaceDto
      */
-    content?: Array<NamespaceDto>;
+    content: Array<NamespaceDto>;
     /**
      * 
      * @type {PageMetadata}
      * @memberof PagedModelNamespaceDto
      */
-    page?: PageMetadata;
+    page: PageMetadata;
 }
 
 /**
  * Check if a given object implements the PagedModelNamespaceDto interface.
  */
 export function instanceOfPagedModelNamespaceDto(value: object): value is PagedModelNamespaceDto {
+    if (!('content' in value) || value['content'] === undefined) return false;
+    if (!('page' in value) || value['page'] === undefined) return false;
     return true;
 }
 
@@ -65,8 +67,8 @@ export function PagedModelNamespaceDtoFromJSONTyped(json: any, ignoreDiscriminat
     }
     return {
         
-        'content': json['content'] == null ? undefined : ((json['content'] as Array<any>).map(NamespaceDtoFromJSON)),
-        'page': json['page'] == null ? undefined : PageMetadataFromJSON(json['page']),
+        'content': ((json['content'] as Array<any>).map(NamespaceDtoFromJSON)),
+        'page': PageMetadataFromJSON(json['page']),
     };
 }
 
@@ -81,7 +83,7 @@ export function PagedModelNamespaceDtoToJSONTyped(value?: PagedModelNamespaceDto
 
     return {
         
-        'content': value['content'] == null ? undefined : ((value['content'] as Array<any>).map(NamespaceDtoToJSON)),
+        'content': ((value['content'] as Array<any>).map(NamespaceDtoToJSON)),
         'page': PageMetadataToJSON(value['page']),
     };
 }

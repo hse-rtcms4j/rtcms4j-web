@@ -39,19 +39,21 @@ export interface PagedModelConfigurationDto {
      * @type {Array<ConfigurationDto>}
      * @memberof PagedModelConfigurationDto
      */
-    content?: Array<ConfigurationDto>;
+    content: Array<ConfigurationDto>;
     /**
      * 
      * @type {PageMetadata}
      * @memberof PagedModelConfigurationDto
      */
-    page?: PageMetadata;
+    page: PageMetadata;
 }
 
 /**
  * Check if a given object implements the PagedModelConfigurationDto interface.
  */
 export function instanceOfPagedModelConfigurationDto(value: object): value is PagedModelConfigurationDto {
+    if (!('content' in value) || value['content'] === undefined) return false;
+    if (!('page' in value) || value['page'] === undefined) return false;
     return true;
 }
 
@@ -65,8 +67,8 @@ export function PagedModelConfigurationDtoFromJSONTyped(json: any, ignoreDiscrim
     }
     return {
         
-        'content': json['content'] == null ? undefined : ((json['content'] as Array<any>).map(ConfigurationDtoFromJSON)),
-        'page': json['page'] == null ? undefined : PageMetadataFromJSON(json['page']),
+        'content': ((json['content'] as Array<any>).map(ConfigurationDtoFromJSON)),
+        'page': PageMetadataFromJSON(json['page']),
     };
 }
 
@@ -81,7 +83,7 @@ export function PagedModelConfigurationDtoToJSONTyped(value?: PagedModelConfigur
 
     return {
         
-        'content': value['content'] == null ? undefined : ((value['content'] as Array<any>).map(ConfigurationDtoToJSON)),
+        'content': ((value['content'] as Array<any>).map(ConfigurationDtoToJSON)),
         'page': PageMetadataToJSON(value['page']),
     };
 }

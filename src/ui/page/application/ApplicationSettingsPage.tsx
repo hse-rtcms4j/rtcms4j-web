@@ -33,7 +33,7 @@ import { useEffect, useState } from "react";
 import { buildNamespacePath } from "@/router";
 import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
 import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
-import type { ApplicationDto, KeycloakClientDto, NamespaceDto } from "@/api/generated";
+import type { ApplicationDto, KeycloakClientDto, NamespaceDto } from "@/api/generated/core";
 import { useToast } from "@/ui/util/alerts-anchor";
 import { coreApi } from "@/api/client";
 import parseApiFetchError from "@/api/error-handler";

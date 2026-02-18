@@ -10,7 +10,6 @@ export * from './ConfigurationDetailedDto';
 export * from './ConfigurationDto';
 export * from './ConfigurationDtoCreateRequest';
 export * from './ConfigurationDtoUpdateRequest';
-export * from './ErrorResponseDto';
 export * from './KeycloakClientDto';
 export * from './NamespaceCreateRequest';
 export * from './NamespaceDto';

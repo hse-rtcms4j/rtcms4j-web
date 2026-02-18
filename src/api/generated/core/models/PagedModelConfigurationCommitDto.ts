@@ -39,19 +39,21 @@ export interface PagedModelConfigurationCommitDto {
      * @type {Array<ConfigurationCommitDto>}
      * @memberof PagedModelConfigurationCommitDto
      */
-    content?: Array<ConfigurationCommitDto>;
+    content: Array<ConfigurationCommitDto>;
     /**
      * 
      * @type {PageMetadata}
      * @memberof PagedModelConfigurationCommitDto
      */
-    page?: PageMetadata;
+    page: PageMetadata;
 }
 
 /**
  * Check if a given object implements the PagedModelConfigurationCommitDto interface.
  */
 export function instanceOfPagedModelConfigurationCommitDto(value: object): value is PagedModelConfigurationCommitDto {
+    if (!('content' in value) || value['content'] === undefined) return false;
+    if (!('page' in value) || value['page'] === undefined) return false;
     return true;
 }
 
@@ -65,8 +67,8 @@ export function PagedModelConfigurationCommitDtoFromJSONTyped(json: any, ignoreD
     }
     return {
         
-        'content': json['content'] == null ? undefined : ((json['content'] as Array<any>).map(ConfigurationCommitDtoFromJSON)),
-        'page': json['page'] == null ? undefined : PageMetadataFromJSON(json['page']),
+        'content': ((json['content'] as Array<any>).map(ConfigurationCommitDtoFromJSON)),
+        'page': PageMetadataFromJSON(json['page']),
     };
 }
 
@@ -81,7 +83,7 @@ export function PagedModelConfigurationCommitDtoToJSONTyped(value?: PagedModelCo
 
     return {
         
-        'content': value['content'] == null ? undefined : ((value['content'] as Array<any>).map(ConfigurationCommitDtoToJSON)),
+        'content': ((value['content'] as Array<any>).map(ConfigurationCommitDtoToJSON)),
         'page': PageMetadataToJSON(value['page']),
     };
 }

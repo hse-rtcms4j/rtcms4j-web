@@ -1,28 +1,22 @@
 
-# ErrorResponse
+# ConfigurationFeedbackResponseDto
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`httpCode` | number
-`httpStatus` | string
-`detailCode` | number
-`detailMessage` | string
+`content` | [Array&lt;ConfigurationFeedbackDto&gt;](ConfigurationFeedbackDto.md)
 
 ## Example
 
 ```typescript
-import type { ErrorResponse } from ''
+import type { ConfigurationFeedbackResponseDto } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "httpCode": null,
-  "httpStatus": null,
-  "detailCode": null,
-  "detailMessage": null,
-} satisfies ErrorResponse
+  "content": null,
+} satisfies ConfigurationFeedbackResponseDto
 
 console.log(example)
 
@@ -31,7 +25,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as ErrorResponse
+const exampleParsed = JSON.parse(exampleJSON) as ConfigurationFeedbackResponseDto
 console.log(exampleParsed)
 ```
 

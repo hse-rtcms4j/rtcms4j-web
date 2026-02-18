@@ -1,5 +1,5 @@
 import { ResponseError, FetchError, RequiredError } from "@/api/generated/runtime";
-import type { ErrorResponseDto } from "@/api/generated";
+import type { ErrorResponseDto } from "@/api/generated/common";
 
 
 export type ApiErrorKind = "http" | "timeout" | "abort" | "network" | "required" | "unknown";

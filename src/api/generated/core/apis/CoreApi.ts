@@ -13,29 +13,31 @@
  */
 
 
-import * as runtime from '../runtime';
+import * as runtime from '../../runtime';
 import type {
-  ApplicationCreateRequest,
-  ApplicationDto,
-  ApplicationUpdateRequest,
-  ConfigurationCommitDetailedDto,
-  ConfigurationCommitRequest,
-  ConfigurationDetailedDto,
-  ConfigurationDto,
-  ConfigurationDtoCreateRequest,
-  ConfigurationDtoUpdateRequest,
-  ErrorResponseDto,
-  KeycloakClientDto,
-  NamespaceCreateRequest,
-  NamespaceDto,
-  NamespaceUpdateRequest,
-  Pageable,
-  PagedModelApplicationDto,
-  PagedModelConfigurationCommitDto,
-  PagedModelConfigurationDto,
-  PagedModelNamespaceDto,
-  UserRoleDto,
+    ApplicationCreateRequest,
+    ApplicationDto,
+    ApplicationUpdateRequest,
+    ConfigurationCommitDetailedDto,
+    ConfigurationCommitRequest,
+    ConfigurationDetailedDto,
+    ConfigurationDto,
+    ConfigurationDtoCreateRequest,
+    ConfigurationDtoUpdateRequest,
+    KeycloakClientDto,
+    NamespaceCreateRequest,
+    NamespaceDto,
+    NamespaceUpdateRequest,
+    Pageable,
+    PagedModelApplicationDto,
+    PagedModelConfigurationCommitDto,
+    PagedModelConfigurationDto,
+    PagedModelNamespaceDto,
+    UserRoleDto,
 } from '../models/index';
+import type {
+    ErrorResponseDto,
+} from '../../common/models';
 import {
     ApplicationCreateRequestFromJSON,
     ApplicationCreateRequestToJSON,
@@ -55,8 +57,6 @@ import {
     ConfigurationDtoCreateRequestToJSON,
     ConfigurationDtoUpdateRequestFromJSON,
     ConfigurationDtoUpdateRequestToJSON,
-    ErrorResponseDtoFromJSON,
-    ErrorResponseDtoToJSON,
     KeycloakClientDtoFromJSON,
     KeycloakClientDtoToJSON,
     NamespaceCreateRequestFromJSON,
@@ -78,6 +78,10 @@ import {
     UserRoleDtoFromJSON,
     UserRoleDtoToJSON,
 } from '../models/index';
+import type {
+    ErrorResponseDtoFromJSON,
+    ErrorResponseDtoToJSON,
+} from '../../common/models';
 
 export interface AddApplicationManagerRequest {
     nid: number;

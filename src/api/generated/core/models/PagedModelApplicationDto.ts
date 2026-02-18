@@ -39,19 +39,21 @@ export interface PagedModelApplicationDto {
      * @type {Array<ApplicationDto>}
      * @memberof PagedModelApplicationDto
      */
-    content?: Array<ApplicationDto>;
+    content: Array<ApplicationDto>;
     /**
      * 
      * @type {PageMetadata}
      * @memberof PagedModelApplicationDto
      */
-    page?: PageMetadata;
+    page: PageMetadata;
 }
 
 /**
  * Check if a given object implements the PagedModelApplicationDto interface.
  */
 export function instanceOfPagedModelApplicationDto(value: object): value is PagedModelApplicationDto {
+    if (!('content' in value) || value['content'] === undefined) return false;
+    if (!('page' in value) || value['page'] === undefined) return false;
     return true;
 }
 
@@ -65,8 +67,8 @@ export function PagedModelApplicationDtoFromJSONTyped(json: any, ignoreDiscrimin
     }
     return {
         
-        'content': json['content'] == null ? undefined : ((json['content'] as Array<any>).map(ApplicationDtoFromJSON)),
-        'page': json['page'] == null ? undefined : PageMetadataFromJSON(json['page']),
+        'content': ((json['content'] as Array<any>).map(ApplicationDtoFromJSON)),
+        'page': PageMetadataFromJSON(json['page']),
     };
 }
 
@@ -81,7 +83,7 @@ export function PagedModelApplicationDtoToJSONTyped(value?: PagedModelApplicatio
 
     return {
         
-        'content': value['content'] == null ? undefined : ((value['content'] as Array<any>).map(ApplicationDtoToJSON)),
+        'content': ((value['content'] as Array<any>).map(ApplicationDtoToJSON)),
         'page': PageMetadataToJSON(value['page']),
     };
 }

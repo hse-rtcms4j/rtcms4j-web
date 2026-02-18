@@ -1,24 +1,24 @@
 
-# AvailableResourcesDto
+# ConfigurationFeedbackRequestDto
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`namespaces` | [PagedModelNamespaceDto](PagedModelNamespaceDto.md)
-`applications` | [PagedModelApplicationDto](PagedModelApplicationDto.md)
+`clientName` | string
+`appliedVersion` | string
 
 ## Example
 
 ```typescript
-import type { AvailableResourcesDto } from ''
+import type { ConfigurationFeedbackRequestDto } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "namespaces": null,
-  "applications": null,
-} satisfies AvailableResourcesDto
+  "clientName": null,
+  "appliedVersion": null,
+} satisfies ConfigurationFeedbackRequestDto
 
 console.log(example)
 
@@ -27,7 +27,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as AvailableResourcesDto
+const exampleParsed = JSON.parse(exampleJSON) as ConfigurationFeedbackRequestDto
 console.log(exampleParsed)
 ```
 

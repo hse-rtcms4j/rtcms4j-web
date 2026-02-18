@@ -1,22 +1,26 @@
 
-# UserInfoDto
+# ConfigurationFeedbackDto
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`sub` | string
+`datedAt` | string
+`clientName` | string
+`appliedVersion` | string
 
 ## Example
 
 ```typescript
-import type { UserInfoDto } from ''
+import type { ConfigurationFeedbackDto } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "sub": null,
-} satisfies UserInfoDto
+  "datedAt": null,
+  "clientName": null,
+  "appliedVersion": null,
+} satisfies ConfigurationFeedbackDto
 
 console.log(example)
 
@@ -25,7 +29,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as UserInfoDto
+const exampleParsed = JSON.parse(exampleJSON) as ConfigurationFeedbackDto
 console.log(exampleParsed)
 ```
 

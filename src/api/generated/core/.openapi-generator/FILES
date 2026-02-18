@@ -1,3 +1,4 @@
+.openapi-generator-ignore
 apis/CoreApi.ts
 apis/index.ts
 docs/ApplicationCreateRequest.md
