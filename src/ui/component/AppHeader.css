@@ -1,0 +1,30 @@
+.app-masthead {
+  background: var(--app-color-os-hd-black);
+  color: var(--app-color-os-text-white);
+}
+
+.app-masthead-toggle span {
+  color: var(--app-color-os-text-white);
+}
+
+.app-masthead-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-masthead-brandtext {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.app-masthead-brandtext-title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.app-masthead-brandtext-subtitle {
+  font-size: 12px;
+  opacity: 0.85;
+}
