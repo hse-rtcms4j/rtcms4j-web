@@ -7,9 +7,10 @@ await keycloak.init({
     onLoad: "login-required",
 });
 
+const fetch = createKeycloakFetch(keycloak)
 const coreConfig = new CoreConfiguration({
     basePath: import.meta.env.VITE_CORE_API_BASE_URL,
-    fetchApi: createKeycloakFetch(keycloak),
+    fetchApi: fetch,
 });
 export const coreApi = new CoreApi(coreConfig);
 
