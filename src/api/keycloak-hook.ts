@@ -15,13 +15,25 @@ export default function createKeycloakFetch(keycloak: Keycloak): typeof fetch {
 
         const headers = new Headers(init?.headers);
 
+        const modifiedInit: RequestInit = { ...init };
+
+        if (init?.body && typeof init.body === 'object' &&
+            !(init.body instanceof FormData) &&
+            !(init.body instanceof Blob) &&
+            !(init.body instanceof ArrayBuffer)) {
+            modifiedInit.body = JSON.stringify(init.body);
+
+            if (!headers.has('Content-Type')) {
+                headers.set('Content-Type', 'application/json');
+            }
+        }
+
         if (keycloak.token) {
             headers.set("Authorization", `Bearer ${keycloak.token}`);
         }
 
-        return fetch(input, {
-            ...init,
-            headers,
-        });
+        modifiedInit.headers = headers;
+
+        return fetch(input, modifiedInit);
     };
 }
