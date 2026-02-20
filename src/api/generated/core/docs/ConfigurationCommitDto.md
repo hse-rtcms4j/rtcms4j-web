@@ -6,9 +6,11 @@
 
 Name | Type
 ------------ | -------------
+`createdAt` | Date
 `namespaceId` | number
 `applicationId` | number
 `configurationId` | number
+`commitSchemaId` | number
 `commitId` | number
 `commitVersion` | string
 `sourceType` | [SourceType](SourceType.md)
@@ -21,9 +23,11 @@ import type { ConfigurationCommitDto } from ''
 
 // TODO: Update the object below with actual values
 const example = {
+  "createdAt": null,
   "namespaceId": null,
   "applicationId": null,
   "configurationId": null,
+  "commitSchemaId": null,
   "commitId": null,
   "commitVersion": null,
   "sourceType": null,

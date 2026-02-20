@@ -42,12 +42,12 @@ export default function AppLayout() {
                             }
                         >
                             <NavItem>
-                                <NavLink to={namespacesPath + namespacesSearchSubpath}>
+                                <NavLink end to={namespacesPath + namespacesSearchSubpath}>
                                     Search namespaces
                                 </NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink to={namespacesPath + namespaceCreateSubpath}>
+                                <NavLink end to={namespacesPath + namespaceCreateSubpath}>
                                     Create namespace
                                 </NavLink>
                             </NavItem>
@@ -61,7 +61,7 @@ export default function AppLayout() {
                             }
                         >
                             <NavItem>
-                                <NavLink to={namespacesPath + systemSubpath}>
+                                <NavLink end to={namespacesPath + systemSubpath}>
                                     Web UI
                                 </NavLink>
                             </NavItem>

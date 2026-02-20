@@ -2,8 +2,10 @@ import {
     Button,
     Card,
     CardBody,
+    CardHeader,
     CardTitle,
     Divider,
+    EmptyState,
     Flex,
     FlexItem,
     Modal,
@@ -11,6 +13,9 @@ import {
     ModalFooter,
     ModalHeader,
     Pagination,
+    Spinner,
+    Timestamp,
+    Tooltip,
 } from "@patternfly/react-core";
 import {
     Table,
@@ -31,6 +36,8 @@ import { useToast } from "@/ui/util/alerts-anchor";
 import { coreApi } from "@/api/client";
 import parseApiFetchError from "@/api/error-handler";
 import { CodeEditor, Language } from "@patternfly/react-code-editor";
+import SyncIcon from "@patternfly/react-icons/dist/esm/icons/sync-icon";
+import CubesIcon from "@patternfly/react-icons/dist/esm/icons/cubes-icon";
 
 type SelectedCommit = {
     id: number;
@@ -75,7 +82,7 @@ function useConfigurationCommits(namespaceId: number, applicationId: number, con
         return () => {
             cancelled = true;
         };
-    }, [namespaceId, applicationId, pageNumber, pageSize, refreshKey]);
+    }, [namespaceId, applicationId, configurationId, pageNumber, pageSize, refreshKey]);
 
     return state;
 }
@@ -229,7 +236,22 @@ export default function NamespaceAdminsPage() {
         <Flex direction={{ default: 'column' }}>
             <FlexItem>
                 <Card ouiaId="BasicCard">
-                    <CardTitle>Configuration {configuration.name} versions</CardTitle>
+                    <CardHeader
+                        hasWrap
+                        actions={{
+                            hasNoOffset: true,
+                            actions: [
+                                <Button
+                                    variant="link"
+                                    aria-label="Refresh"
+                                    onClick={() => setRefreshKey(v => v + 1)}
+                                    icon={<SyncIcon />}
+                                >Refresh</Button>
+                            ]
+                        }}
+                    >
+                        <CardTitle>Configuration {configuration.name} versions</CardTitle>
+                    </CardHeader>
                     <CardBody>A configuration version is a fixed state of key-value properties.</CardBody>
                 </Card>
             </FlexItem>
@@ -248,62 +270,67 @@ export default function NamespaceAdminsPage() {
                 <Divider />
             </FlexItem>
             <FlexItem>
-                <Table aria-label="Table">
-                    <Thead>
-                        <Tr>
-                            <Th>Commit id</Th>
-                            <Th>Version</Th>
-                            <Th>Kind</Th>
-                            <Th screenReaderText="Rollback action" />
-                            <Th screenReaderText="Manage action" />
-                            <Th screenReaderText="Delete action" />
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {commitsWrapper?.loading ? (
-                            ""
-                        ) : commitsWrapper?.pagedModel?.content?.length === 0 ? (
-                            ""
-                        ) : (
-                            commitsWrapper?.pagedModel?.content?.map(commit => (
-                                <Tr key={commit.commitId}>
-                                    <Td dataLabel="Commit id">{commit.commitId}</Td>
-                                    <Td dataLabel="Commit version">{commit.commitVersion}{configuration.commitVersion == commit.commitVersion ? " (current)" : ""}</Td>
-                                    <Td dataLabel="Commit version">New commit</Td>
-                                    <Td modifier="fitContent" hasAction>
-                                        {configuration.commitVersion != commit.commitVersion ?
-                                            <TableText>
-                                                <Button variant="primary" icon={<RedoIcon />} onClick={() => openRollbackModalByCommitId(commit.commitId)}>
-                                                    Rollback
-                                                </Button>
-                                            </TableText>
-                                            : ""
-                                        }
-                                    </Td>
-                                    <Td modifier="fitContent" hasAction>
-                                        {<TableText>
-                                            <Button variant="link" icon={<SearchIcon />} onClick={() => openShowModalByCommitId(commit.commitId)}>
-                                                Show details
-                                            </Button>
-                                        </TableText>}
-                                    </Td>
-                                    <Td modifier="fitContent" hasAction>
-                                        {configuration.commitVersion != commit.commitVersion ?
-                                            <TableText>
-                                                <Button variant="danger" icon={<TimesIcon />} onClick={() => openDeleteModalByCommitId(commit.commitId)}>
-                                                    Delete
-                                                </Button>
-                                            </TableText>
-                                            : ""
-                                        }
-                                    </Td>
+                {
+                    commitsWrapper?.loading ? (
+                        <EmptyState titleText="Loading..." headingLevel="h4" icon={Spinner} />
+                    ) : commitsWrapper?.pagedModel?.content?.length === 0 ? (
+                        <EmptyState titleText="No versions present..." headingLevel="h4" icon={CubesIcon} />
+                    ) : (
+                        <Table aria-label="Table">
+                            <Thead>
+                                <Tr>
+                                    <Th>Timestamp</Th>
+                                    <Th>Version</Th>
+                                    <Th>Description</Th>
+                                    <Th>Author</Th>
+                                    <Th screenReaderText="Rollback action" />
+                                    <Th screenReaderText="Manage action" />
+                                    <Th screenReaderText="Delete action" />
                                 </Tr>
-                            )
-                            )
-                        )
-                        }
-                    </Tbody>
-                </Table>
+                            </Thead>
+                            <Tbody>
+                                {commitsWrapper?.pagedModel?.content?.map(commit => (
+                                    <Tr key={commit.commitId}>
+                                        <Td modifier="fitContent"><Timestamp date={new Date(commit.createdAt)} /></Td>
+                                        <Td>{commit.commitVersion}{configuration.commitVersion == commit.commitVersion ? " (current)" : ""}</Td>
+                                        <Td>Commit({commit.commitId}) for schema({commit.commitSchemaId}).</Td>
+                                        <Td>
+                                            <Tooltip content={<div>{commit.sourceIdentity}</div>}><div>{commit.sourceType.toString()}</div></Tooltip>
+                                        </Td>
+                                        <Td modifier="fitContent" hasAction>
+                                            {configuration.commitVersion != commit.commitVersion ?
+                                                <TableText>
+                                                    <Button variant="primary" icon={<RedoIcon />} onClick={() => openRollbackModalByCommitId(commit.commitId)}>
+                                                        Rollback
+                                                    </Button>
+                                                </TableText>
+                                                : ""
+                                            }
+                                        </Td>
+                                        <Td modifier="fitContent" hasAction>
+                                            {<TableText>
+                                                <Button variant="link" icon={<SearchIcon />} onClick={() => openShowModalByCommitId(commit.commitId)}>
+                                                    Show details
+                                                </Button>
+                                            </TableText>}
+                                        </Td>
+                                        <Td modifier="fitContent" hasAction>
+                                            {configuration.commitVersion != commit.commitVersion ?
+                                                <TableText>
+                                                    <Button variant="danger" icon={<TimesIcon />} onClick={() => openDeleteModalByCommitId(commit.commitId)}>
+                                                        Delete
+                                                    </Button>
+                                                </TableText>
+                                                : ""
+                                            }
+                                        </Td>
+                                    </Tr>
+                                ))
+                                }
+                            </Tbody>
+                        </Table>
+                    )
+                }
                 <Modal
                     variant="small"
                     isOpen={isRollbackModalVisible}
