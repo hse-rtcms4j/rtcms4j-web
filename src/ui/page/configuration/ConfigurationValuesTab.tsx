@@ -48,7 +48,13 @@ function fromJSONSchema(jsonSchema: string, jsonValues: string): ValuesRow[] {
     const rows: ValuesRow[] = [];
     const properties = parsedSchema?.properties || {};
 
-    Object.keys(properties).forEach((key) => {
+    const sortedKeys = Object.keys(properties).sort((a, b) => {
+        if (a === 'version') return 1;
+        if (b === 'version') return -1;
+        return 0;
+    });
+
+    sortedKeys.forEach((key) => {
         const prop = properties[key];
 
         const row: ValuesRow = {

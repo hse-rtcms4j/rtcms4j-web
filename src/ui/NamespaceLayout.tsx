@@ -53,7 +53,7 @@ export default function AppLayout() {
                                 }
                             >
                                 <NavItem>
-                                    <NavLink to={namespacesPath}>
+                                    <NavLink end to={namespacesPath}>
                                         Open global control panel
                                     </NavLink>
                                 </NavItem>
@@ -68,12 +68,12 @@ export default function AppLayout() {
                             }
                         >
                             <NavItem>
-                                <NavLink to={buildNamespacePath(namespace.id) + namespaceSettingsSubpath}>
+                                <NavLink end to={buildNamespacePath(namespace.id) + namespaceSettingsSubpath}>
                                     Namespace settings
                                 </NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink to={buildNamespacePath(namespace.id) + namespaceAdminsSubpath}>
+                                <NavLink end to={buildNamespacePath(namespace.id) + namespaceAdminsSubpath}>
                                     Namespace admins
                                 </NavLink>
                             </NavItem>
@@ -87,12 +87,12 @@ export default function AppLayout() {
                             }
                         >
                             <NavItem>
-                                <NavLink to={buildNamespacePath(namespace.id) + applicationsSearchSubpath}>
+                                <NavLink end to={buildNamespacePath(namespace.id) + applicationsSearchSubpath}>
                                     Search applications
                                 </NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink to={buildNamespacePath(namespace.id) + applicationCreateSubpath}>
+                                <NavLink end to={buildNamespacePath(namespace.id) + applicationCreateSubpath}>
                                     Create application
                                 </NavLink>
                             </NavItem>

@@ -55,7 +55,7 @@ export default function AppLayout() {
                                 }
                             >
                                 <NavItem>
-                                    <NavLink to={namespacesPath}>
+                                    <NavLink end to={namespacesPath}>
                                         Open global control panel
                                     </NavLink>
                                 </NavItem>
@@ -71,7 +71,7 @@ export default function AppLayout() {
                                 }
                             >
                                 <NavItem>
-                                    <NavLink to={buildNamespacePath(namespace.id)}>
+                                    <NavLink end to={buildNamespacePath(namespace.id)}>
                                         Open namespace control panel
                                     </NavLink>
                                 </NavItem>
@@ -86,12 +86,17 @@ export default function AppLayout() {
                             }
                         >
                             <NavItem>
-                                <NavLink to={buildApplicationPath(namespaceId, application.id) + applicationSettingsSubpath}>
+                                <NavLink end to={buildApplicationPath(namespaceId, application.id)}>
+                                    Control panel
+                                </NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink end to={buildApplicationPath(namespaceId, application.id) + applicationSettingsSubpath}>
                                     Application settings
                                 </NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink to={buildApplicationPath(namespaceId, application.id) + applicationManagersSubpath}>
+                                <NavLink end to={buildApplicationPath(namespaceId, application.id) + applicationManagersSubpath}>
                                     Application managers
                                 </NavLink>
                             </NavItem>
@@ -105,12 +110,12 @@ export default function AppLayout() {
                             }
                         >
                             <NavItem>
-                                <NavLink to={buildApplicationPath(namespaceId, application.id) + configurationsSearchSubpath}>
+                                <NavLink end to={buildApplicationPath(namespaceId, application.id) + configurationsSearchSubpath}>
                                     Search configurations
                                 </NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink to={buildApplicationPath(namespaceId, application.id) + configurationCreateSubpath}>
+                                <NavLink end to={buildApplicationPath(namespaceId, application.id) + configurationCreateSubpath}>
                                     Create configuration
                                 </NavLink>
                             </NavItem>

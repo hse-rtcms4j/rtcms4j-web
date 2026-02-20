@@ -54,7 +54,7 @@ export default function AppLayout() {
                                 }
                             >
                                 <NavItem>
-                                    <NavLink to={namespacesPath}>
+                                    <NavLink end to={namespacesPath}>
                                         Open global control panel
                                     </NavLink>
                                 </NavItem>
@@ -70,7 +70,7 @@ export default function AppLayout() {
                                 }
                             >
                                 <NavItem>
-                                    <NavLink to={buildNamespacePath(namespace.id)}>
+                                    <NavLink end to={buildNamespacePath(namespace.id)}>
                                         Open namespace control panel
                                     </NavLink>
                                 </NavItem>
@@ -85,7 +85,7 @@ export default function AppLayout() {
                             }
                         >
                             <NavItem>
-                                <NavLink to={buildApplicationPath(namespaceId, application.id)}>
+                                <NavLink end to={buildApplicationPath(namespaceId, application.id)}>
                                     Open application control panel
                                 </NavLink>
                             </NavItem>
@@ -99,12 +99,17 @@ export default function AppLayout() {
                             }
                         >
                             <NavItem>
-                                <NavLink to={buildConfigurationPath(namespaceId, application.id, configuration.id) + configurationSettingsSubpath}>
+                                <NavLink end to={buildConfigurationPath(namespaceId, application.id, configuration.id)}>
+                                    Control panel
+                                </NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink end to={buildConfigurationPath(namespaceId, application.id, configuration.id) + configurationSettingsSubpath}>
                                     Settings
                                 </NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink to={buildConfigurationPath(namespaceId, application.id, configuration.id) + configurationVersionsSubpath}>
+                                <NavLink end to={buildConfigurationPath(namespaceId, application.id, configuration.id) + configurationVersionsSubpath}>
                                     Versions
                                 </NavLink>
                             </NavItem>

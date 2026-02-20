@@ -1,4 +1,3 @@
-
 /* tslint:disable */
 /* eslint-disable */
 /**
@@ -30,6 +29,12 @@ import {
 export interface ConfigurationCommitDto {
     /**
      * 
+     * @type {Date}
+     * @memberof ConfigurationCommitDto
+     */
+    createdAt: Date;
+    /**
+     * 
      * @type {number}
      * @memberof ConfigurationCommitDto
      */
@@ -46,6 +51,12 @@ export interface ConfigurationCommitDto {
      * @memberof ConfigurationCommitDto
      */
     configurationId: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConfigurationCommitDto
+     */
+    commitSchemaId: number;
     /**
      * 
      * @type {number}
@@ -78,9 +89,11 @@ export interface ConfigurationCommitDto {
  * Check if a given object implements the ConfigurationCommitDto interface.
  */
 export function instanceOfConfigurationCommitDto(value: object): value is ConfigurationCommitDto {
+    if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     if (!('namespaceId' in value) || value['namespaceId'] === undefined) return false;
     if (!('applicationId' in value) || value['applicationId'] === undefined) return false;
     if (!('configurationId' in value) || value['configurationId'] === undefined) return false;
+    if (!('commitSchemaId' in value) || value['commitSchemaId'] === undefined) return false;
     if (!('commitId' in value) || value['commitId'] === undefined) return false;
     if (!('commitVersion' in value) || value['commitVersion'] === undefined) return false;
     if (!('sourceType' in value) || value['sourceType'] === undefined) return false;
@@ -98,9 +111,11 @@ export function ConfigurationCommitDtoFromJSONTyped(json: any, ignoreDiscriminat
     }
     return {
         
+        'createdAt': (new Date(json['createdAt'])),
         'namespaceId': json['namespaceId'],
         'applicationId': json['applicationId'],
         'configurationId': json['configurationId'],
+        'commitSchemaId': json['commitSchemaId'],
         'commitId': json['commitId'],
         'commitVersion': json['commitVersion'],
         'sourceType': SourceTypeFromJSON(json['sourceType']),
@@ -119,9 +134,11 @@ export function ConfigurationCommitDtoToJSONTyped(value?: ConfigurationCommitDto
 
     return {
         
+        'createdAt': value['createdAt'].toISOString(),
         'namespaceId': value['namespaceId'],
         'applicationId': value['applicationId'],
         'configurationId': value['configurationId'],
+        'commitSchemaId': value['commitSchemaId'],
         'commitId': value['commitId'],
         'commitVersion': value['commitVersion'],
         'sourceType': SourceTypeToJSON(value['sourceType']),
