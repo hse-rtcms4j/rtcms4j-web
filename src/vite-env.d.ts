@@ -14,6 +14,7 @@ type ImportMetaEnv = {
   DEV: boolean
   PROD: boolean
   // @user-defined-start
+  VITE_APP_VERSION: string
   /*
    *  You can use this section to explicitly extend the type definition of `import.meta.env`
    *  This is useful if you're using Vite plugins that define specific `import.meta.env` properties.
