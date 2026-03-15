@@ -34,7 +34,8 @@ function useNamespaces(name: string | undefined, pageNumber: number, pageSize: n
             try {
                 const namespaces = await coreApi.findAllNamespaces({
                     name,
-                    pageable: { page: pageNumber, size: pageSize },
+                    page: pageNumber,
+                    size: pageSize,
                 });
                 if (!cancelled) setState({ pagedModel: namespaces, loading: false });
             } catch {

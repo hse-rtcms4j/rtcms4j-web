@@ -16,7 +16,6 @@ export * from './NamespaceCreateRequest';
 export * from './NamespaceDto';
 export * from './NamespaceUpdateRequest';
 export * from './PageMetadata';
-export * from './Pageable';
 export * from './PagedModelApplicationDto';
 export * from './PagedModelConfigurationCommitDto';
 export * from './PagedModelConfigurationDto';

@@ -5,6 +5,10 @@ import {
     CardBody,
     CardFooter,
     CardTitle,
+    DescriptionList,
+    DescriptionListDescription,
+    DescriptionListGroup,
+    DescriptionListTerm,
     EmptyState,
     Flex,
     FlexItem,
@@ -276,68 +280,89 @@ export default function NamespaceSettingsPage() {
                         </Modal>
                     </Tab>
                     <Tab eventKey={1} title={<TabTitleText>Program credentials</TabTitleText>}>
-                        <Card ouiaId="BasicCard">
-                            <CardTitle>Keycloak client credentials</CardTitle>
-                            <CardBody>Client id and secret are automatically generated and cannot be assigned directly. In case you suspect secret compromise, you can rotate it.</CardBody>
-                            <CardFooter>
-                                {keycloakClient.loading ? (
-                                    <FlexItem>
-                                        <EmptyState titleText="Loading..." headingLevel="h4" icon={Spinner} />
-                                    </FlexItem>
-                                ) : keycloakClient.keycloakClient == undefined ? (
-                                    <FlexItem>
-                                        <EmptyState titleText="Unable to load keycloak client credentials." headingLevel="h4" />
-                                    </FlexItem>
-                                ) : (
-                                    <Form isHorizontal>
-                                        <FormGroup label="Client Id" fieldId="horizontal-form-client-id">
-                                            <TextInputGroup>
-                                                <TextInputGroupMain
-                                                    value={keycloakClient.keycloakClient.clientId}
-                                                    type={clientIdVisible ? "text" : "password"}
-                                                    readOnly={true}
-                                                    id="client-id"
-                                                />
-                                                <TextInputGroupUtilities>
-                                                    <Button
-                                                        variant="plain"
-                                                        aria-label="Show"
-                                                        icon={clientIdVisible ? <EyeSlashIcon /> : <EyeIcon />}
-                                                        onClick={() => setClientIdVisible(v => !v)}
-                                                    />
-                                                </TextInputGroupUtilities>
-                                            </TextInputGroup>
-                                        </FormGroup>
-                                        <FormGroup label="Client Secret" fieldId="horizontal-form-client-sec">
-                                            <Flex direction={{ default: 'row' }}>
-                                                <FlexItem flex={{ default: 'flex_1' }}>
+                        <Flex direction={{ default: 'column' }}>
+                            <FlexItem>
+                                <Card ouiaId="BasicCard">
+                                    <CardTitle>RTCMS4J application identity</CardTitle>
+                                    <CardBody>
+                                        <DescriptionList isHorizontal>
+                                            <DescriptionListGroup>
+                                                <DescriptionListTerm>Namespace id</DescriptionListTerm>
+                                                <DescriptionListDescription>{namespaceId}</DescriptionListDescription>
+                                            </DescriptionListGroup>
+                                            <DescriptionListGroup>
+                                                <DescriptionListTerm>Application id</DescriptionListTerm>
+                                                <DescriptionListDescription>{application.id}</DescriptionListDescription>
+                                            </DescriptionListGroup>
+                                        </DescriptionList>
+                                    </CardBody>
+                                </Card>
+                            </FlexItem>
+                            <FlexItem>
+                                <Card ouiaId="BasicCard">
+                                    <CardTitle>Keycloak client credentials</CardTitle>
+                                    <CardBody>Client id and secret are automatically generated and cannot be assigned directly. In case you suspect secret compromise, you can rotate it.</CardBody>
+                                    <CardFooter>
+                                        {keycloakClient.loading ? (
+                                            <FlexItem>
+                                                <EmptyState titleText="Loading..." headingLevel="h4" icon={Spinner} />
+                                            </FlexItem>
+                                        ) : keycloakClient.keycloakClient == undefined ? (
+                                            <FlexItem>
+                                                <EmptyState titleText="Unable to load keycloak client credentials." headingLevel="h4" />
+                                            </FlexItem>
+                                        ) : (
+                                            <Form isHorizontal>
+                                                <FormGroup label="Client Id" fieldId="horizontal-form-client-id">
                                                     <TextInputGroup>
                                                         <TextInputGroupMain
-                                                            value={keycloakClient.keycloakClient.secret}
-                                                            type={clientSecretVisible ? "text" : "password"}
+                                                            value={keycloakClient.keycloakClient.clientId}
+                                                            type={clientIdVisible ? "text" : "password"}
                                                             readOnly={true}
-                                                            id="client-secret"
+                                                            id="client-id"
                                                         />
                                                         <TextInputGroupUtilities>
                                                             <Button
                                                                 variant="plain"
                                                                 aria-label="Show"
-                                                                icon={clientSecretVisible ? <EyeSlashIcon /> : <EyeIcon />}
-                                                                onClick={() => setClientSecretVisible(v => !v)}
+                                                                icon={clientIdVisible ? <EyeSlashIcon /> : <EyeIcon />}
+                                                                onClick={() => setClientIdVisible(v => !v)}
                                                             />
                                                         </TextInputGroupUtilities>
                                                     </TextInputGroup>
-                                                </FlexItem>
-                                                <FlexItem>
-                                                    <Button variant="primary" onClick={openRotationModal}>Rotate secret</Button>
-                                                </FlexItem>
-                                            </Flex>
-                                        </FormGroup>
-                                    </Form>
-                                )
-                                }
-                            </CardFooter>
-                        </Card>
+                                                </FormGroup>
+                                                <FormGroup label="Client Secret" fieldId="horizontal-form-client-sec">
+                                                    <Flex direction={{ default: 'row' }}>
+                                                        <FlexItem flex={{ default: 'flex_1' }}>
+                                                            <TextInputGroup>
+                                                                <TextInputGroupMain
+                                                                    value={keycloakClient.keycloakClient.secret}
+                                                                    type={clientSecretVisible ? "text" : "password"}
+                                                                    readOnly={true}
+                                                                    id="client-secret"
+                                                                />
+                                                                <TextInputGroupUtilities>
+                                                                    <Button
+                                                                        variant="plain"
+                                                                        aria-label="Show"
+                                                                        icon={clientSecretVisible ? <EyeSlashIcon /> : <EyeIcon />}
+                                                                        onClick={() => setClientSecretVisible(v => !v)}
+                                                                    />
+                                                                </TextInputGroupUtilities>
+                                                            </TextInputGroup>
+                                                        </FlexItem>
+                                                        <FlexItem>
+                                                            <Button variant="primary" onClick={openRotationModal}>Rotate secret</Button>
+                                                        </FlexItem>
+                                                    </Flex>
+                                                </FormGroup>
+                                            </Form>
+                                        )
+                                        }
+                                    </CardFooter>
+                                </Card>
+                            </FlexItem>
+                        </Flex>
                         <Modal
                             variant="small"
                             isOpen={isRotationModalVisible}

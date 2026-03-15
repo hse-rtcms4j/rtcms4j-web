@@ -29,7 +29,6 @@ import type {
   NamespaceCreateRequest,
   NamespaceDto,
   NamespaceUpdateRequest,
-  Pageable,
   PagedModelApplicationDto,
   PagedModelConfigurationCommitDto,
   PagedModelConfigurationDto,
@@ -65,8 +64,6 @@ import {
     NamespaceDtoToJSON,
     NamespaceUpdateRequestFromJSON,
     NamespaceUpdateRequestToJSON,
-    PageableFromJSON,
-    PageableToJSON,
     PagedModelApplicationDtoFromJSON,
     PagedModelApplicationDtoToJSON,
     PagedModelConfigurationCommitDtoFromJSON,
@@ -144,29 +141,34 @@ export interface DeleteNamespaceRequest {
 export interface FindAllApplicationsRequest {
     nid: number;
     name?: string;
-    pageable?: Pageable;
+    page?: number;
+    size?: number;
 }
 
 export interface FindAllConfigurationsRequest {
     nid: number;
     aid: number;
     name?: string;
-    pageable?: Pageable;
+    page?: number;
+    size?: number;
 }
 
 export interface FindAllNamespacesRequest {
     name?: string;
-    pageable?: Pageable;
+    page?: number;
+    size?: number;
 }
 
 export interface FindAvailableApplicationsRequest {
     name?: string;
-    pageable?: Pageable;
+    page?: number;
+    size?: number;
 }
 
 export interface FindAvailableNamespacesRequest {
     name?: string;
-    pageable?: Pageable;
+    page?: number;
+    size?: number;
 }
 
 export interface GetApplicationRequest {
@@ -201,7 +203,8 @@ export interface GetConfigurationCommitsRequest {
     nid: number;
     aid: number;
     cid: number;
-    pageable?: Pageable;
+    page?: number;
+    size?: number;
 }
 
 export interface GetNamespaceRequest {
@@ -918,8 +921,12 @@ export class CoreApi extends runtime.BaseAPI {
             queryParameters['name'] = requestParameters['name'];
         }
 
-        if (requestParameters['pageable'] != null) {
-            queryParameters['pageable'] = requestParameters['pageable'];
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['size'] != null) {
+            queryParameters['size'] = requestParameters['size'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -978,8 +985,12 @@ export class CoreApi extends runtime.BaseAPI {
             queryParameters['name'] = requestParameters['name'];
         }
 
-        if (requestParameters['pageable'] != null) {
-            queryParameters['pageable'] = requestParameters['pageable'];
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['size'] != null) {
+            queryParameters['size'] = requestParameters['size'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -1025,8 +1036,12 @@ export class CoreApi extends runtime.BaseAPI {
             queryParameters['name'] = requestParameters['name'];
         }
 
-        if (requestParameters['pageable'] != null) {
-            queryParameters['pageable'] = requestParameters['pageable'];
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['size'] != null) {
+            queryParameters['size'] = requestParameters['size'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -1070,8 +1085,12 @@ export class CoreApi extends runtime.BaseAPI {
             queryParameters['name'] = requestParameters['name'];
         }
 
-        if (requestParameters['pageable'] != null) {
-            queryParameters['pageable'] = requestParameters['pageable'];
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['size'] != null) {
+            queryParameters['size'] = requestParameters['size'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -1115,8 +1134,12 @@ export class CoreApi extends runtime.BaseAPI {
             queryParameters['name'] = requestParameters['name'];
         }
 
-        if (requestParameters['pageable'] != null) {
-            queryParameters['pageable'] = requestParameters['pageable'];
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['size'] != null) {
+            queryParameters['size'] = requestParameters['size'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -1466,8 +1489,12 @@ export class CoreApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
-        if (requestParameters['pageable'] != null) {
-            queryParameters['pageable'] = requestParameters['pageable'];
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['size'] != null) {
+            queryParameters['size'] = requestParameters['size'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

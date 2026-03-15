@@ -917,7 +917,7 @@ example().catch(console.error);
 
 ## findAllApplications
 
-> PagedModelApplicationDto findAllApplications(nid, name, pageable)
+> PagedModelApplicationDto findAllApplications(nid, name, page, size)
 
 Get all namespace applications
 
@@ -943,8 +943,10 @@ async function example() {
     nid: 789,
     // string | Search by name param (optional)
     name: name_example,
-    // Pageable (optional)
-    pageable: ...,
+    // number (optional)
+    page: 56,
+    // number (optional)
+    size: 56,
   } satisfies FindAllApplicationsRequest;
 
   try {
@@ -966,7 +968,8 @@ example().catch(console.error);
 |------------- | ------------- | ------------- | -------------|
 | **nid** | `number` | Namespace id | [Defaults to `undefined`] |
 | **name** | `string` | Search by name param | [Optional] [Defaults to `undefined`] |
-| **pageable** | [](.md) |  | [Optional] [Defaults to `undefined`] |
+| **page** | `number` |  | [Optional] [Defaults to `undefined`] |
+| **size** | `number` |  | [Optional] [Defaults to `undefined`] |
 
 ### Return type
 
@@ -997,7 +1000,7 @@ example().catch(console.error);
 
 ## findAllConfigurations
 
-> PagedModelConfigurationDto findAllConfigurations(nid, aid, name, pageable)
+> PagedModelConfigurationDto findAllConfigurations(nid, aid, name, page, size)
 
 Get namespace application configurations
 
@@ -1025,8 +1028,10 @@ async function example() {
     aid: 789,
     // string | Search by name param (optional)
     name: name_example,
-    // Pageable (optional)
-    pageable: ...,
+    // number (optional)
+    page: 56,
+    // number (optional)
+    size: 56,
   } satisfies FindAllConfigurationsRequest;
 
   try {
@@ -1049,7 +1054,8 @@ example().catch(console.error);
 | **nid** | `number` | Namespace id | [Defaults to `undefined`] |
 | **aid** | `number` | Application id | [Defaults to `undefined`] |
 | **name** | `string` | Search by name param | [Optional] [Defaults to `undefined`] |
-| **pageable** | [](.md) |  | [Optional] [Defaults to `undefined`] |
+| **page** | `number` |  | [Optional] [Defaults to `undefined`] |
+| **size** | `number` |  | [Optional] [Defaults to `undefined`] |
 
 ### Return type
 
@@ -1080,7 +1086,7 @@ example().catch(console.error);
 
 ## findAllNamespaces
 
-> PagedModelNamespaceDto findAllNamespaces(name, pageable)
+> PagedModelNamespaceDto findAllNamespaces(name, page, size)
 
 Get all namespaces
 
@@ -1104,8 +1110,10 @@ async function example() {
   const body = {
     // string | Search by name param (optional)
     name: name_example,
-    // Pageable (optional)
-    pageable: ...,
+    // number (optional)
+    page: 56,
+    // number (optional)
+    size: 56,
   } satisfies FindAllNamespacesRequest;
 
   try {
@@ -1126,7 +1134,8 @@ example().catch(console.error);
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **name** | `string` | Search by name param | [Optional] [Defaults to `undefined`] |
-| **pageable** | [](.md) |  | [Optional] [Defaults to `undefined`] |
+| **page** | `number` |  | [Optional] [Defaults to `undefined`] |
+| **size** | `number` |  | [Optional] [Defaults to `undefined`] |
 
 ### Return type
 
@@ -1157,7 +1166,7 @@ example().catch(console.error);
 
 ## findAvailableApplications
 
-> PagedModelApplicationDto findAvailableApplications(name, pageable)
+> PagedModelApplicationDto findAvailableApplications(name, page, size)
 
 Find available  applications
 
@@ -1181,8 +1190,10 @@ async function example() {
   const body = {
     // string | Search by name param (optional)
     name: name_example,
-    // Pageable (optional)
-    pageable: ...,
+    // number (optional)
+    page: 56,
+    // number (optional)
+    size: 56,
   } satisfies FindAvailableApplicationsRequest;
 
   try {
@@ -1203,7 +1214,8 @@ example().catch(console.error);
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **name** | `string` | Search by name param | [Optional] [Defaults to `undefined`] |
-| **pageable** | [](.md) |  | [Optional] [Defaults to `undefined`] |
+| **page** | `number` |  | [Optional] [Defaults to `undefined`] |
+| **size** | `number` |  | [Optional] [Defaults to `undefined`] |
 
 ### Return type
 
@@ -1234,7 +1246,7 @@ example().catch(console.error);
 
 ## findAvailableNamespaces
 
-> PagedModelNamespaceDto findAvailableNamespaces(name, pageable)
+> PagedModelNamespaceDto findAvailableNamespaces(name, page, size)
 
 Find available namespaces
 
@@ -1258,8 +1270,10 @@ async function example() {
   const body = {
     // string | Search by name param (optional)
     name: name_example,
-    // Pageable (optional)
-    pageable: ...,
+    // number (optional)
+    page: 56,
+    // number (optional)
+    size: 56,
   } satisfies FindAvailableNamespacesRequest;
 
   try {
@@ -1280,7 +1294,8 @@ example().catch(console.error);
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **name** | `string` | Search by name param | [Optional] [Defaults to `undefined`] |
-| **pageable** | [](.md) |  | [Optional] [Defaults to `undefined`] |
+| **page** | `number` |  | [Optional] [Defaults to `undefined`] |
+| **size** | `number` |  | [Optional] [Defaults to `undefined`] |
 
 ### Return type
 
@@ -1708,7 +1723,7 @@ example().catch(console.error);
 
 ## getConfigurationCommits
 
-> PagedModelConfigurationCommitDto getConfigurationCommits(nid, aid, cid, pageable)
+> PagedModelConfigurationCommitDto getConfigurationCommits(nid, aid, cid, page, size)
 
 Get namespace application configuration commits
 
@@ -1736,8 +1751,10 @@ async function example() {
     aid: 789,
     // number | Configuration id
     cid: 789,
-    // Pageable (optional)
-    pageable: ...,
+    // number (optional)
+    page: 56,
+    // number (optional)
+    size: 56,
   } satisfies GetConfigurationCommitsRequest;
 
   try {
@@ -1760,7 +1777,8 @@ example().catch(console.error);
 | **nid** | `number` | Namespace id | [Defaults to `undefined`] |
 | **aid** | `number` | Application id | [Defaults to `undefined`] |
 | **cid** | `number` | Configuration id | [Defaults to `undefined`] |
-| **pageable** | [](.md) |  | [Optional] [Defaults to `undefined`] |
+| **page** | `number` |  | [Optional] [Defaults to `undefined`] |
+| **size** | `number` |  | [Optional] [Defaults to `undefined`] |
 
 ### Return type
 
