@@ -35,7 +35,8 @@ function useApplications(namespaceId: number, name: string | undefined, pageNumb
                 const namespaces = await coreApi.findAllApplications({
                     nid: namespaceId,
                     name,
-                    pageable: { page: pageNumber, size: pageSize },
+                    page: pageNumber,
+                    size: pageSize,
                 });
                 if (!cancelled) setState({ pagedModel: namespaces, loading: false });
             } catch {

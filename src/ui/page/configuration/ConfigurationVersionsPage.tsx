@@ -71,7 +71,8 @@ function useConfigurationCommits(namespaceId: number, applicationId: number, con
                     nid: namespaceId,
                     aid: applicationId,
                     cid: configurationId,
-                    pageable: { page: pageNumber, size: pageSize },
+                    page: pageNumber,
+                    size: pageSize,
                 });
                 if (!cancelled) setState({ pagedModel: configurations, loading: false });
             } catch {

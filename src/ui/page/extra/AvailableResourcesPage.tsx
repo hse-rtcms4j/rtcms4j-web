@@ -42,7 +42,8 @@ function useNamespaces(name: string | undefined, pageNumber: number, pageSize: n
             try {
                 const namespaces = await coreApi.findAvailableNamespaces({
                     name,
-                    pageable: { page: pageNumber, size: pageSize },
+                    page: pageNumber,
+                    size: pageSize,
                 });
                 if (!cancelled) setState({ pagedModel: namespaces, loading: false });
             } catch {
@@ -73,7 +74,8 @@ function useApplications(name: string | undefined, pageNumber: number, pageSize:
             try {
                 const applications = await coreApi.findAvailableApplications({
                     name,
-                    pageable: { page: pageNumber, size: pageSize },
+                    page: pageNumber,
+                    size: pageSize,
                 });
                 if (!cancelled) setState({ pagedModel: applications, loading: false });
             } catch {

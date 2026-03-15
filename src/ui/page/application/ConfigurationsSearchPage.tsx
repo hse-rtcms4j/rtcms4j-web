@@ -36,7 +36,8 @@ function useConfigurations(namespaceId: number, applicationId: number, name: str
                     nid: namespaceId,
                     aid: applicationId,
                     name,
-                    pageable: { page: pageNumber, size: pageSize },
+                    page: pageNumber,
+                    size: pageSize,
                 });
                 if (!cancelled) setState({ pagedModel: configurations, loading: false });
             } catch {
