@@ -236,7 +236,7 @@ export default function NamespaceSettingsPage() {
                                                 id="simple-switch"
                                                 label="Allow configurations creation by services"
                                                 isChecked={isCreationByService}
-                                                onChange={(_, v) => { setIsCreationByService(v) }}
+                                                onChange={(_, v) => setIsCreationByService(v)}
                                                 ouiaId="BasicSwitch"
                                                 isReversed
                                             />
@@ -377,10 +377,10 @@ export default function NamespaceSettingsPage() {
                                     </FlexItem>
                                     <FlexItem>
                                         <Switch
-                                            id="simple-switch"
+                                            id="simple-switch-2"
                                             label="Propagate secret rotation"
                                             isChecked={isPropagateRotation}
-                                            onChange={(_, v) => { setIsPropagateRotation(v) }}
+                                            onChange={(_, v) => setIsPropagateRotation(v)}
                                             ouiaId="PropagateSwitch"
                                         />
                                     </FlexItem>

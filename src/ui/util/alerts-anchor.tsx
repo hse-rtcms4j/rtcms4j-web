@@ -19,6 +19,7 @@ const ToastContext = createContext<ToastContextValue | null>(null);
 
 export function AlertsAnchor({ children }: { children: React.ReactNode }) {
     const [alerts, setAlerts] = useState<ToastAlert[]>([]);
+    const [showAllAlerts, setShowAllAlerts] = useState(false);
     const maxDisplayed = 4;
 
     const addAlert = (title: string, variant: AlertProps['variant'], description?: string, timeout?: number) => {
@@ -33,7 +34,7 @@ export function AlertsAnchor({ children }: { children: React.ReactNode }) {
 
     const overflowMessage = useMemo(() => {
         const overflow = alerts.length - maxDisplayed;
-        return overflow > 0 ? `View ${overflow} more alerts` : '';
+        return overflow > 0 ? `View ${overflow} more alert(s)` : '';
     }, [alerts.length]);
 
     const value = useMemo(() => ({ addAlert, removeAlert, clear }), []);
@@ -42,8 +43,14 @@ export function AlertsAnchor({ children }: { children: React.ReactNode }) {
         <ToastContext.Provider value={value}>
             {children}
 
-            <AlertGroup hasAnimations isToast isLiveRegion overflowMessage={overflowMessage}>
-                {alerts.slice(0, maxDisplayed).map(({ key, variant, title, description, timeout }) => (
+            <AlertGroup
+                hasAnimations
+                isToast
+                isLiveRegion
+                overflowMessage={overflowMessage}
+                onOverflowClick={() => { setShowAllAlerts(true); console.log(alerts.length); }}
+            >
+                {(showAllAlerts ? alerts : alerts.slice(0, maxDisplayed)).map(({ key, variant, title, description, timeout }) => (
                     <Alert
                         key={key}
                         variant={variant}
@@ -56,6 +63,7 @@ export function AlertsAnchor({ children }: { children: React.ReactNode }) {
                             />
                         }
                         timeout={timeout ?? false}
+                        onTimeout={() => removeAlert(key)}
                     >{description}</Alert>
                 ))}
             </AlertGroup>
