@@ -9,8 +9,11 @@ import {
     DescriptionListTerm,
     Flex,
     FlexItem,
+    FormHelperText,
     FormSelect,
     FormSelectOption,
+    HelperText,
+    HelperTextItem,
     Switch,
     TextInput,
 } from "@patternfly/react-core";
@@ -21,13 +24,18 @@ import { useToast } from "@/ui/util/alerts-anchor";
 import { coreApi } from "@/api/client";
 import parseApiFetchError from "@/api/error-handler";
 import { CodeEditor, Language } from "@patternfly/react-code-editor";
+import ArrayInput from "@/ui/component/ArrayInput"
+import ExclamationCircleIcon from "@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon";
 
 type ValuesRow = {
     id: string;
     key: string;
-    value: string;
+    value: any;
     type: string;
     description?: string;
+    isList?: boolean;
+    itemsType?: string;
+    enumValues?: string[];
 };
 
 function fromJSONSchema(jsonSchema: string, jsonValues: string): ValuesRow[] {
@@ -48,6 +56,47 @@ function fromJSONSchema(jsonSchema: string, jsonValues: string): ValuesRow[] {
     const rows: ValuesRow[] = [];
     const properties = parsedSchema?.properties || {};
 
+    const resolveRef = (ref: string): any => {
+        if (!ref.startsWith('#/')) return {};
+        const path = ref.substring(2).split('/');
+        let result: any = parsedSchema;
+        for (const segment of path) {
+            if (result && typeof result === 'object') {
+                result = result[segment];
+            } else {
+                return {};
+            }
+        }
+        return result;
+    };
+
+    const getTypeInfo = (prop: any): { type: string, itemsType?: string, isList: boolean, enumValues?: string[] } => {
+        // Resolve $ref if present
+        let actualProp = prop;
+        if (prop.$ref) {
+            actualProp = resolveRef(prop.$ref);
+        }
+
+        let type = actualProp.type || 'string';
+        let isList = false;
+        let itemsType: string | undefined = undefined;
+        let enumValues: string[] | undefined = undefined;
+
+        if (type === 'array' && actualProp.items) {
+            isList = true;
+            const itemsDef = actualProp.items.$ref ? resolveRef(actualProp.items.$ref) : actualProp.items;
+            itemsType = itemsDef.type || 'string';
+
+            if (itemsDef.enum && Array.isArray(itemsDef.enum)) {
+                enumValues = itemsDef.enum;
+            }
+        } else if (actualProp.enum && Array.isArray(actualProp.enum)) {
+            enumValues = actualProp.enum;
+        }
+
+        return { type, itemsType, isList, enumValues };
+    };
+
     const sortedKeys = Object.keys(properties).sort((a, b) => {
         if (a === 'version') return 1;
         if (b === 'version') return -1;
@@ -56,13 +105,17 @@ function fromJSONSchema(jsonSchema: string, jsonValues: string): ValuesRow[] {
 
     sortedKeys.forEach((key) => {
         const prop = properties[key];
+        const { type, itemsType, isList, enumValues } = getTypeInfo(prop);
 
         const row: ValuesRow = {
             id: crypto.randomUUID(),
             key: key,
             value: parsedValues[key],
-            type: prop.type,
-            description: prop.description || ''
+            type: type,
+            description: prop.description || '',
+            isList: isList,
+            itemsType: itemsType,
+            enumValues: enumValues
         };
 
         rows.push(row);
@@ -73,18 +126,33 @@ function fromJSONSchema(jsonSchema: string, jsonValues: string): ValuesRow[] {
 
 function toJSONValues(rows: ValuesRow[]): string {
     const defaultObject: Record<string, any> = {};
+    console.log(rows);
 
     rows.forEach((row) => {
-        let value: string | boolean | number = row.value;
+        let value: any = row.value;
 
-        if (row.type == 'boolean') {
-            if (row.value == 'true') {
-                value = true;
-            } else if (row.value == 'false') {
-                value = false;
+        if (row.isList && Array.isArray(value)) {
+            if (row.itemsType === 'boolean') {
+                value = value.map((v: any) => v === true || v === 'true');
+            } else if (row.itemsType === 'number') {
+                value = value.map((v: any) => parseFloat(v));
+            } else if (row.itemsType === 'integer') {
+                value = value.map((v: any) => parseInt(v, 10));
+            } else if (row.itemsType === 'string') {
+                value = value.map((v: any) => String(v));
             }
-        } else if (row.type == 'number') {
-            value = Number(row.value);
+        }
+
+        else {
+            if (row.type === 'boolean') {
+                value = value === true || value === 'true';
+            } else if (row.type === 'number') {
+                value = parseFloat(value);
+            } else if (row.type === 'integer') {
+                value = parseInt(value, 10);
+            } else if (row.type === 'string') {
+                value = String(value);
+            }
         }
 
         defaultObject[row.key] = value;
@@ -92,6 +160,99 @@ function toJSONValues(rows: ValuesRow[]): string {
 
     return JSON.stringify(defaultObject, null, 2);
 };
+
+function renderInput(row: ValuesRow, index: number, updateRow: any) {
+    // Handle arrays
+    if (row.isList) {
+        return (
+            <ArrayInput
+                id={`${row.id}_value`}
+                type={row.itemsType}
+                enumValues={row.enumValues}
+                value={row.value}
+                onChange={(newValue) => updateRow(index, 'value', newValue)}
+            />
+        );
+    }
+
+    // Handle enums (non-array)
+    if (row.enumValues && row.enumValues.length > 0) {
+        return (
+            <FormSelect
+                id={`${row.id}_value`}
+                isRequired
+                value={row.value || ''}
+                onChange={(_, value) => updateRow(index, 'value', value)}
+            >
+                {row.enumValues.map((enumVal) => (
+                    <FormSelectOption key={enumVal} value={enumVal} label={enumVal} />
+                ))}
+            </FormSelect>
+        );
+    }
+
+    // Handle primitives
+    if (row.type === 'integer' || row.type === 'number') {
+        const value = row.value ?? '';
+        let validatedState: "error" | "default" | "success" | "warning" | undefined = "default";
+        let errorText = '';
+
+        const num = parseFloat(value);
+        if (isNaN(num)) {
+            validatedState = "error";
+            errorText = 'Must be a valid number';
+        } else if (row.type === 'integer' && !Number.isInteger(num)) {
+            validatedState = "error";
+            errorText = 'Must be an integer';
+        }
+
+        return (
+            <>
+                <TextInput
+                    id={`${row.id}_value`}
+                    isRequired
+                    value={row.value ?? ''}
+                    type="number"
+                    validated={validatedState}
+                    onChange={(_, value) => updateRow(index, 'value', value)}
+                />
+                {validatedState === 'error' ? (
+                    <FormHelperText>
+                        <HelperText>
+                            <HelperTextItem icon={<ExclamationCircleIcon />} variant='error'>
+                                {errorText}
+                            </HelperTextItem>
+                        </HelperText>
+                    </FormHelperText>
+                ) : ''}
+            </>
+        );
+    }
+
+    if (row.type === 'boolean') {
+        return (
+            <FormSelect
+                id={`${row.id}_value`}
+                isRequired
+                value={row.value ? 'true' : 'false'}
+                onChange={(_, value) => updateRow(index, 'value', value)}
+            >
+                <FormSelectOption value="true" label="true" />
+                <FormSelectOption value="false" label="false" />
+            </FormSelect>
+        );
+    }
+
+    // Default: string
+    return (
+        <TextInput
+            id={`${row.id}_value`}
+            isRequired
+            value={row.value ?? ''}
+            onChange={(_, value) => updateRow(index, 'value', value)}
+        />
+    );
+}
 
 
 export default function NamespaceValuesTab() {
@@ -203,35 +364,12 @@ export default function NamespaceValuesTab() {
                         <CardBody>
                             <DescriptionList isHorizontal>
                                 {rows.map((row, index) => (
-                                    <Card component="div">
+                                    <Card component="div" key={row.id}>
                                         <DescriptionListTerm>{row.key}</DescriptionListTerm>
                                         <DescriptionListDescription>
                                             <Flex direction={{ default: 'column' }}>
                                                 <FlexItem>
-                                                    {row.type == 'number' ?
-                                                        <TextInput
-                                                            id={`${row.id}_value`}
-                                                            isRequired
-                                                            value={row.value}
-                                                            type="number"
-                                                            onChange={(_, value) => updateRow(index, 'value', value)}
-                                                        /> : row.type == 'boolean' ?
-                                                            <FormSelect
-                                                                id={`${row.id}_value`}
-                                                                isRequired
-                                                                value={row.value}
-                                                                onChange={(_, value) => updateRow(index, 'value', value)}
-                                                            >
-                                                                <FormSelectOption value="true" label="true" />
-                                                                <FormSelectOption value="false" label="false" />
-                                                            </FormSelect> :
-                                                            <TextInput
-                                                                id={`${row.id}_value`}
-                                                                isRequired
-                                                                value={row.value}
-                                                                onChange={(_, value) => updateRow(index, 'value', value)}
-                                                            />
-                                                    }
+                                                    {renderInput(row, index, updateRow)}
                                                 </FlexItem>
                                                 <FlexItem>
                                                     {row.description}
