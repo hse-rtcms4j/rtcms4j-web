@@ -52,7 +52,7 @@ export default function NamespaceCreatePage() {
                 if (parsedError.dto?.detailMessage !== undefined) {
                     errorMessage = parsedError.dto?.detailMessage
                 } else if (parsedError.status === 409) {
-                    errorMessage = `There is already namespace named ${requestName}.`
+                    errorMessage = `There is already application named ${requestName}.`
                 } else if (parsedError.status === 400) {
                     errorMessage = "Wrong request!"
                 } else {

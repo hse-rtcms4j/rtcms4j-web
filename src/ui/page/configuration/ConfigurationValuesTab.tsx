@@ -234,7 +234,7 @@ function renderInput(row: ValuesRow, index: number, updateRow: any) {
             <FormSelect
                 id={`${row.id}_value`}
                 isRequired
-                value={row.value ? 'true' : 'false'}
+                value={row.value}
                 onChange={(_, value) => updateRow(index, 'value', value)}
             >
                 <FormSelectOption value="true" label="true" />
